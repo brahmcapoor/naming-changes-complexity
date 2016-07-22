@@ -3,11 +3,11 @@ Source code for an experiment I helped conduct as part of my internship at the C
 
 ## The experiment
 
-### Running this
+## Running this
 
-#### OSX
+### OSX
 
-*You must have [Psychopy](http://www.psychopy.org/) installed and set up.*
+**You must have [Psychopy](http://www.psychopy.org/) installed and set up.**
 
 I use the awesome [Psychopy plugin for Atom](https://atom.io/packages/psychopy) to run this, but you can also just open whichever file you want to in the standalone Psychopy environment, and run it from there. 
 
