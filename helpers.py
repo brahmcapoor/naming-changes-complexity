@@ -2,34 +2,26 @@ from psychopy import gui
 import csv
 import ast
 
-def get_subject_info(training = False):
+def get_subject_info(training = False, subject_number = 1):
     """
     Retrieves subject information
 
     The optional 'training' parameter, if True, asks for the number of pairs
     to show as well.
 
-    Returns either a tuple of subject number and number of pairs, or just
+    Returns either a list of information, or just
     the subject number
     """
-    #TODO: Eliminate asking for number of pairs
-    #TODO: Dominant eye?
 
-
-    if training:
-        window_title = "Training"
-    else:
-        window_title = "Enter subject number"
+    window_title = "Subject " + str(subject_number)
 
     input = gui.Dlg(title = window_title)
-    input.addField('Subject Number')
-    if training:
-        input.addField('Number of pairs')
-
+    input.addField('Round number', 1)
+    input.addField("Right eye dominant", True)
     input.show()
 
     if training:
-        return (int(input.data[0]), int(input.data[1]))
+        return tuple(input.data)
     else:
         return int(input.data[0])
 
