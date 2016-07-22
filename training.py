@@ -1,21 +1,9 @@
-from psychopy import visual, core, event, gui
+from psychopy import visual, core, event
 from random import sample
-from helpers import choose_pair
+from helpers import choose_pair, get_subject_info
 import os
 import csv
 
-
-def get_subject_info():
-    """
-    Prompts for the number of pairs to show the subject
-
-    Return a tuple (subject number, number of pairs)
-    """
-    input = gui.Dlg(title = "Training")
-    input.addField('Subject Number')
-    input.addField('Number of pairs')
-    input.show()
-    return (int(input.data[0]), int(input.data[1]))
 
 
 def show_pair(mywin, path_string, name_1, name_2):
@@ -39,6 +27,7 @@ def show_pair(mywin, path_string, name_1, name_2):
         label.draw()
         mywin.flip()
         core.wait(2)
+
 
 def write_to_file(subject_number, pairs, names):
     """
@@ -66,6 +55,7 @@ def generate_names(num_pairs):
     """
 
     #TODO: naming procedure
+    #TODO: Distinguish between easy/hard names. Maybe just first is easier?
     for i in range(num_pairs):
         pass
     return ['name 1', 'name 2', 'name 3', 'name 4']
@@ -77,7 +67,7 @@ def main():
     #TODO: screensize
 
 
-    subject_num, num_pairs = get_subject_info()
+    subject_num, num_pairs = get_subject_info(training = True)
 
     #create window
     mywin = visual.Window([1920,1080], monitor = "testMonitor",
