@@ -9,21 +9,24 @@ VOWELS = ['a', 'e', 'i', 'o', 'u']
 CONSONANTS = ['s', 'z', 'f', 'v', 'k', 'g', 'p', 'b', 't', 'd']
 
 def generate_random_word(complex = True):
-"""
-Generates one random word
-"""
+    """
+    Generates one random word
+    """
 
     if complex:
-        syllables = 4
+        letters = 4
 
     else:
-        syllables = randint(1,2)
+        letters = 2
 
-    vowels = sample(VOWELS, syllables)
-    consonants = sample(CONSONANTS, syllables)
+    vowels = sample(VOWELS, letters)
+    consonants = sample(CONSONANTS, letters)
+    if not complex:
+        vowels.extend(vowels)
+        consonants.extend(consonants)
     shuffle(vowels)
     shuffle(consonants)
-    return "".join(consonants[i] + vowels[i] for i in range(syllables))
+    return "".join(consonants[i] + vowels[i] for i in range(4))
 
 def generate_pair_name():
     simple = generate_random_word(False)
