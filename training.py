@@ -5,7 +5,6 @@ import os
 import csv
 
 
-
 def show_pair(mywin, path_string, name_1, name_2):
     """
     Shows the pair of images on the screen, with a 2 second delay between images

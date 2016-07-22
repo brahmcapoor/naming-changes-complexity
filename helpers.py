@@ -13,6 +13,8 @@ def get_subject_info(training = False):
     the subject number
     """
     #TODO: Eliminate asking for number of pairs
+    #TODO: Dominant eye?
+
 
     if training:
         window_title = "Training"
