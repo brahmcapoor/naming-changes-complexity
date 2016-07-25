@@ -10,11 +10,16 @@ def main():
     #   * Response time
     #   # Difficulty of name (Just record names instead and do in post?)
 
-    subject_info = get_subject_info()
-    pair_nums, names = retrieve_subject_pairs(subject_info)
-
-    for pair in pair_nums:
-        pair_path = choose_pair(pair)
+    mywin = visual.Window([1920,1080], monitor = "testMonitor",
+                          units = "deg", rgb=(-1,-1,-1), fullscr = True)
+    for i in range(100):
+        img_num = i % 10
+        img_path = "Masks/{}.JPG".format(img_num)
+        img = visual.ImageStim(mywin, image = img_path, color=(1,1,1),
+                               size=[5,5], pos =(0,0))
+        img.draw()
+        mywin.flip()
+        core.wait(0.1)
 
 if __name__ == "__main__":
     main()
