@@ -17,13 +17,13 @@ def show_pair(mywin, path_string, name_1, name_2):
         name = pair_names[i-1]
 
         img_1 = visual.ImageStim(mywin, image = img_file, color=(1,1,1),
-                               size=[5, 5], pos =(-10,2))
-        label_1 = visual.TextStim(mywin, text=name, pos=(-10,-2),
+                               size=[160, 160], pos =(-125,125))
+        label_1 = visual.TextStim(mywin, text=name, pos=(-125,-125),
                                 alignHoriz='center', alignVert='center')
 
         img_2 = visual.ImageStim(mywin, image = img_file, color=(1,1,1),
-                               size=[5, 5], pos =(10,2))
-        label_2 = visual.TextStim(mywin, text=name, pos=(10,-2),
+                               size=[160, 160], pos =(125,125))
+        label_2 = visual.TextStim(mywin, text=name, pos=(125,-125),
                                 alignHoriz='center', alignVert='center')
 
         img_1.draw()
@@ -73,7 +73,7 @@ def main(new_experiment = False, names = ['Name 1', 'Name 2'], subject_number = 
 
     #create window
     mywin = visual.Window([1920,1080], monitor = "testMonitor",
-                          units = "deg", rgb=(-1,-1,-1), fullscr = True)
+                          units = "pix", rgb=(-1,-1,-1), fullscr = True)
 
 
     chosen_pairs = get_chosen_pairs()
