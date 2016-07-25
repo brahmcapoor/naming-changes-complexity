@@ -7,6 +7,11 @@ Main experimental harness
 """
 
 def startup():
+    """
+    Gets various startup config options, and returns a tuple of whether it is a
+    new experiment and what the subject number is.
+    """
+    #TODO: Automate subejct number
 
     check = gui.Dlg("New experiment?")
     check.addField("Starting over?", False)
@@ -32,6 +37,7 @@ def get_names(new_experiment = False):
             f.writelines(name + '\n' for name in names)
 
     return names
+
 
 def main():
     new_experiment, subject_number = startup()
