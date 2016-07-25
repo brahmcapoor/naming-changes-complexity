@@ -34,7 +34,6 @@ def get_names(new_experiment = False):
     return names
 
 def main():
-
     new_experiment, subject_number = startup()
     names = get_names(new_experiment)
     training.main(new_experiment, names, subject_number)
