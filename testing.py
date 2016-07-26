@@ -14,11 +14,13 @@ def step(window, transparency, img, frames):
     #TODO: How much longer should mask be shown?
 
     img.setOpacity(transparency)
+    img.setAutoDraw(True)
 
     for frameN in range(60):
 
         frame_num = frameN//6
         mask_frame = frames[frame_num]
+
 
         mask_frame.draw()
         window.flip()
@@ -35,7 +37,7 @@ def step(window, transparency, img, frames):
 
 
 
-def staircase(window, image, transparency):
+def staircase(window, image, transparency, dominant_eye):
     """
     Performs a single staircase to find the threshold of visibility for a
     subject
@@ -43,15 +45,18 @@ def staircase(window, image, transparency):
     returns the threshold
     """
 
+    if dominant_eye == "True":
+        maskPos = 125
+    else:
+        maskPos = -125
     # Image stuff
     img = visual.ImageStim(window,
                            image = image,
                            color=(1,1,1),
                            size = [160,160],
-                           pos = (-125,0),
+                           pos = (-1 * maskPos,0),
                            opacity = transparency)
 
-    img.setAutoDraw(True)
 
     # Mask stuff
     frame_paths = ["Masks/" + file for file in os.listdir("Masks")]
@@ -59,12 +64,12 @@ def staircase(window, image, transparency):
                                                     image = file_name,
                                                     color = (1,1,1),
                                                     size = [160, 160],
-                                                    pos = (125,0)), frame_paths)
+                                                    pos = (maskPos,0)), frame_paths)
 
-    for i in range(1):
+    for i in range(40):
         transparency += step(window, transparency, img, frames)
-        if transparency > 100:
-            transparency = 100
+        if transparency > 1:
+            transparency = 1
         if transparency < 0:
             transparency = 0
     return transparency
@@ -110,10 +115,10 @@ def main(new_experiment =  True, subject_number = 1):
     img_1 = pair_path + "1.png"
     img_2 = pair_path + "2.png"
 
-    result_10 = staircase(mywin, img_1, 0.5)
-    result_11 = staircase(mywin, img_1, 1)
-    result_20 = staircase(mywin, img_2, 0.5)
-    result_21 = staircase(mywin, img_2, 1)
+    result_10 = staircase(mywin, img_1, 0, dominant_eye)
+    result_11 = staircase(mywin, img_1, 1, dominant_eye)
+    result_20 = staircase(mywin, img_2, 0, dominant_eye)
+    result_21 = staircase(mywin, img_2, 1, dominant_eye)
 
     img_1_avg = (result_10 + result_11)/2
     img_2_avg = (result_20 + result_21)/2
