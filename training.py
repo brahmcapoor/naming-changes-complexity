@@ -26,12 +26,12 @@ def show_pair(mywin, path_string, name_1, name_2):
         label_2 = visual.TextStim(mywin, text=name, pos=(125,-125),
                                 alignHoriz='center', alignVert='center')
 
-        img_1.draw()
-        label_1.draw()
-        img_2.draw()
-        label_2.draw()
-        mywin.flip()
-        core.wait(2)
+        for frameN in range(120):
+            img_1.draw()
+            label_1.draw()
+            img_2.draw()
+            label_2.draw()
+            mywin.flip()
 
 def write_to_file(new_experiment, subject_number, round_num, dom_eye, pair_num, name_1, name_2,
                   difficulty_1, difficulty_2):

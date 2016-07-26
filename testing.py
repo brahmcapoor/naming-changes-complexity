@@ -1,26 +1,37 @@
 from psychopy import visual, core
 from random import sample
 from helpers import choose_pair, retrieve_subject_pairs, get_subject_info
+import os
 
 
 def step(window, transparency):
-    for i in range(10):
 
-        # Mask stuff
-        frame_num = i % 10
+
+    # Image stuff
+    img = visual.ImageStim(window,
+                           image="Pairs/Pair 1/1.png",
+                           color=(1,1,1),
+                           size = [160,160],
+                           pos = (-125,0),
+                           opacity = transparency)
+
+    frame_paths = ["Masks/" + file for file in os.listdir("Masks")]
+    frames = map(lambda file_name: visual.ImageStim(window,
+                                                    image = file_name,
+                                                    color = (1,1,1),
+                                                    size = [160, 160],
+                                                    pos = (125,0)), frame_paths)
+
+    for frameN in range(60):
+
+        frame_num = frameN//6
         frame_path = "Masks/{}.JPG".format(frame_num)
-        mask_frame = visual.ImageStim(window, image = frame_path, color=(1,1,1),
-                               size=[160,160], pos =(125,0))
-
-
-        # Image stuff
-        img = visual.ImageStim(window, image="Pairs/Pair 1/1.png", color=(1,1,1),
-                               size = [160,160], pos = (-125,0), opacity = transparency)
+        mask_frame = frames[frame_num]
 
         mask_frame.draw()
         img.draw()
         window.flip()
-        core.wait(0.1, 0.1)
+
     return 0.025
 
 
@@ -44,8 +55,11 @@ def main():
     #   * Response time
     #   * Difficulty of name (Just record names instead and do in post?)
 
-    mywin = visual.Window([1920,1080], monitor = "testMonitor",
-                          units = "pix", rgb=(-1,-1,-1), fullscr = True)
+    mywin = visual.Window([1920,1080],
+                          monitor = "testMonitor",
+                          units = "pix",
+                          rgb=(-1,-1,-1),
+                          fullscr = True)
     staircase(mywin, 0)
 
 
