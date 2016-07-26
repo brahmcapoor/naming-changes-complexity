@@ -93,12 +93,6 @@ def write_to_csv(new_experiment, subject_number, difficulties, individual_result
 
 
 def main(new_experiment =  True, subject_number = 1):
-    #TODO: Do we need the list of names? Maybe for recording the results?
-    #TODO: Figure how csv will be formatted. Info to save:
-    #   * Subject number
-    #   * Response time
-    #   * Difficulty of name (Just record names instead and do in post?)
-    #TODO: Dominant eye
 
     mywin = visual.Window([1920,1080],
                           monitor = "testMonitor",

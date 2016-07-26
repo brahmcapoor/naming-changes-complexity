@@ -9,7 +9,6 @@ def show_pair(mywin, path_string, name_1, name_2):
     """
     Shows the pair of images on the screen, with a 2 second delay between images
     """
-    #TODO: figure out positioning of elements
 
     pair_names = [name_1, name_2]
     for i in range(1,3):
