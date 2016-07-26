@@ -1,38 +1,26 @@
-from psychopy import visual, core
+from psychopy import visual, core, event
 from random import sample
 from helpers import choose_pair, retrieve_subject_pairs, get_subject_info
 import os
 
 
-def step(window, transparency):
+def step(window, transparency, img, frames):
 
-
-    # Image stuff
-    img = visual.ImageStim(window,
-                           image="Pairs/Pair 1/1.png",
-                           color=(1,1,1),
-                           size = [160,160],
-                           pos = (-125,0),
-                           opacity = transparency)
-
-    frame_paths = ["Masks/" + file for file in os.listdir("Masks")]
-    frames = map(lambda file_name: visual.ImageStim(window,
-                                                    image = file_name,
-                                                    color = (1,1,1),
-                                                    size = [160, 160],
-                                                    pos = (125,0)), frame_paths)
+    img.setOpacity(transparency)
 
     for frameN in range(60):
 
         frame_num = frameN//6
-        frame_path = "Masks/{}.JPG".format(frame_num)
         mask_frame = frames[frame_num]
 
         mask_frame.draw()
-        img.draw()
         window.flip()
 
-    return 0.025
+    keys = event.waitKeys(maxWait = 2)
+    if keys:
+        return -0.025
+    else:
+        return 0.025
 
 
 
@@ -43,8 +31,27 @@ def staircase(window, transparency):
 
     returns the threshold
     """
-    for i in range(40):
-        transparency += step(window, transparency)
+
+    # Image stuff
+    img = visual.ImageStim(window,
+                           image="Pairs/Pair 1/1.png",
+                           color=(1,1,1),
+                           size = [160,160],
+                           pos = (-125,0),
+                           opacity = transparency)
+
+    img.setAutoDraw(True)
+
+
+    frame_paths = ["Masks/" + file for file in os.listdir("Masks")]
+    frames = map(lambda file_name: visual.ImageStim(window,
+                                                    image = file_name,
+                                                    color = (1,1,1),
+                                                    size = [160, 160],
+                                                    pos = (125,0)), frame_paths)
+
+    for i in range(10):
+        transparency += step(window, transparency, img, frames)
     return transparency
 
 
