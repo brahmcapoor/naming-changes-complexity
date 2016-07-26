@@ -1,6 +1,6 @@
 from psychopy import visual, core, event,gui
 from random import shuffle
-import training
+import training, testing
 
 """
 Main experimental harness
@@ -42,6 +42,7 @@ def main():
     new_experiment, subject_number = startup()
     names = get_names(new_experiment)
     training.main(new_experiment, names, subject_number)
+    testing.main(new_experiment, subject_number)
 
 if __name__ == '__main__':
     main()

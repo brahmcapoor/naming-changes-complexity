@@ -44,8 +44,6 @@ def write_to_file(new_experiment, subject_number, round_num, dom_eye, pair_num, 
     subject_data = [subject_number, round_num, dom_eye, pair_num, name_1, name_2,
                     difficulty_1, difficulty_2]
 
-    file_exists = os.path.exists('training_results.csv')
-
     with open('training_results.csv', 'ab') as f:
         wr = csv.writer(f, quoting=csv.QUOTE_ALL)
 
@@ -65,7 +63,7 @@ def get_chosen_pairs():
     data = read_csv('training_results.csv')
     return [subject[3] for subject in data]
 
-def main(new_experiment = False, names = ['Name 1', 'Name 2'], subject_number = 1):
+def main(new_experiment = True, names = ['Name 1', 'Name 2'], subject_number = 1):
     #TODO: screensize
 
     round_num, dom_eye = get_subject_info(training = True,

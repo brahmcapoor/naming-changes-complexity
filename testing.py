@@ -1,10 +1,17 @@
 from psychopy import visual, core, event
 from random import sample
-from helpers import choose_pair, retrieve_subject_pairs, get_subject_info
-import os
+from helpers import choose_pair, retrieve_subject_info, get_subject_info
+import os, csv
 
 
 def step(window, transparency, img, frames):
+    """
+    Performs a single 'step' for the staircase method.
+
+    If a key is pressed, the subject has seen the stimulus and has pressed a
+    key, meaning the stimulus must be more transparent in the next presentation
+    """
+    #TODO: How much longer should mask be shown?
 
     img.setOpacity(transparency)
 
@@ -16,15 +23,19 @@ def step(window, transparency, img, frames):
         mask_frame.draw()
         window.flip()
 
+    img.setAutoDraw(False)
+    window.flip()
+
     keys = event.waitKeys(maxWait = 2)
+
     if keys:
-        return -0.025
+        return -0.02
     else:
-        return 0.025
+        return 0.02
 
 
 
-def staircase(window, transparency):
+def staircase(window, image, transparency):
     """
     Performs a single staircase to find the threshold of visibility for a
     subject
@@ -34,7 +45,7 @@ def staircase(window, transparency):
 
     # Image stuff
     img = visual.ImageStim(window,
-                           image="Pairs/Pair 1/1.png",
+                           image = image,
                            color=(1,1,1),
                            size = [160,160],
                            pos = (-125,0),
@@ -42,7 +53,7 @@ def staircase(window, transparency):
 
     img.setAutoDraw(True)
 
-
+    # Mask stuff
     frame_paths = ["Masks/" + file for file in os.listdir("Masks")]
     frames = map(lambda file_name: visual.ImageStim(window,
                                                     image = file_name,
@@ -50,26 +61,66 @@ def staircase(window, transparency):
                                                     size = [160, 160],
                                                     pos = (125,0)), frame_paths)
 
-    for i in range(10):
+    for i in range(1):
         transparency += step(window, transparency, img, frames)
+        if transparency > 100:
+            transparency = 100
+        if transparency < 0:
+            transparency = 0
     return transparency
 
+def write_to_csv(new_experiment, subject_number, difficulties, individual_results, first_average, second_average):
 
-def main():
+    if new_experiment:
+        if(os.path.exists('testing_results.csv')):
+            os.remove('testing_results.csv')
+
+    data = [subject_number, difficulties, individual_results, first_average, second_average]
+
+    with open('testing_results.csv', 'ab') as f:
+        wr = csv.writer(f, quoting=csv.QUOTE_ALL)
+
+        if new_experiment:
+            header = ["Subject Number", "Difficulties", "Individual results", "Image 1 Average", "Image 2 Average"]
+            wr.writerow(header)
+
+        wr.writerow(data)
+
+
+def main(new_experiment =  True, subject_number = 1):
     #TODO: Do we need the list of names? Maybe for recording the results?
     #TODO: Figure how csv will be formatted. Info to save:
     #   * Subject number
     #   * Response time
     #   * Difficulty of name (Just record names instead and do in post?)
+    #TODO: Dominant eye
 
     mywin = visual.Window([1920,1080],
                           monitor = "testMonitor",
                           units = "pix",
                           rgb=(-1,-1,-1),
                           fullscr = True)
-    staircase(mywin, 0)
 
+    subject_info = retrieve_subject_info(subject_number)
+    dominant_eye = subject_info[2]
+    pair_num = subject_info[3]
+    difficulties = (subject_info[6], subject_info[7])
 
+    pair_path = choose_pair(pair_num)
+    img_1 = pair_path + "1.png"
+    img_2 = pair_path + "2.png"
+
+    result_10 = staircase(mywin, img_1, 0.5)
+    result_11 = staircase(mywin, img_1, 1)
+    result_20 = staircase(mywin, img_2, 0.5)
+    result_21 = staircase(mywin, img_2, 1)
+
+    img_1_avg = (result_10 + result_11)/2
+    img_2_avg = (result_20 + result_21)/2
+
+    individual_results = [result_10, result_11, result_20, result_21]
+
+    write_to_csv(new_experiment, subject_number, difficulties, individual_results, img_1_avg, img_2_avg)
 
 if __name__ == "__main__":
     main()

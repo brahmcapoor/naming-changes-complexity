@@ -34,21 +34,19 @@ def choose_pair(i):
     return "Pairs/Pair " + str(i) +"/"
 
 
-def retrieve_subject_pairs(subject_number):
+def retrieve_subject_info(subject_number):
     """
     Given the subject number, retrieves which pairs they saw from results.csv
     and the names
 
-    returns a tuple (pair numbers, image names)
+    returns a tuple representing the subject
     """
 
     subjects = read_csv('training_results.csv')
 
     for subject in subjects:
         if int(subject[0]) == subject_number:
-            pairs = ast.literal_eval(subject[1])
-            names = ast.literal_eval(subject[2])
-            return (pairs, names)
+            return tuple(subject)
 
 
 def read_csv(filename):
