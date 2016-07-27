@@ -1,4 +1,5 @@
 from psychopy import visual, core, event
+from psychopy.visual import Rect
 from random import sample
 from helpers import choose_pair, retrieve_subject_info, get_subject_info
 import os, csv
@@ -11,7 +12,6 @@ def step(window, transparency, img, frames):
     If a key is pressed, the subject has seen the stimulus and has pressed a
     key, meaning the stimulus must be more transparent in the next presentation
     """
-    #TODO: How much longer should mask be shown?
 
     img.setOpacity(transparency)
     img.setAutoDraw(True)
@@ -21,11 +21,19 @@ def step(window, transparency, img, frames):
         frame_num = frameN//6
         mask_frame = frames[frame_num]
 
-
         mask_frame.draw()
         window.flip()
 
     img.setAutoDraw(False)
+
+    # Mask shows for 100ms longer
+    for frameN in range(6):
+        frame_num = frameN//6
+        mask_frame = frames[frame_num]
+
+        mask_frame.draw()
+        window.flip()
+
     window.flip()
 
     keys = event.waitKeys(maxWait = 2)
@@ -57,6 +65,26 @@ def staircase(window, image, transparency, dominant_eye):
                            pos = (-1 * maskPos,150),
                            opacity = transparency)
 
+    # Fusion box stuff
+
+    box_1 = Rect(win = window,
+                 width = 180,
+                 height = 180,
+                 lineWidth = 4,
+                 lineColor = 'grey',
+                 pos = (maskPos, 150),
+                 autoDraw = True)
+
+    box_2 = Rect(win = window,
+                 width = 180,
+                 height = 180,
+                 lineWidth = 4,
+                 lineColor = 'grey',
+                 pos = (-1 * maskPos, 150),
+                 autoDraw = True)
+
+    box_1.setAutoDraw(True)
+    box_2.setAutoDraw(True)
 
     # Mask stuff
     frame_paths = ["Masks/" + file for file in os.listdir("Masks")]

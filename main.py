@@ -28,7 +28,6 @@ def get_names(new_experiment = False):
 
     with open('names.txt', 'rb') as f:
         names = f.read().splitlines()
-
     #shuffle before each experiment begins
     if new_experiment:
         shuffle(names)
