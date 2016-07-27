@@ -53,7 +53,7 @@ def staircase(window, image, transparency, dominant_eye):
     img = visual.ImageStim(window,
                            image = image,
                            color=(1,1,1),
-                           size = [160,160],
+                           size = [145,145],
                            pos = (-1 * maskPos,0),
                            opacity = transparency)
 
@@ -63,7 +63,7 @@ def staircase(window, image, transparency, dominant_eye):
     frames = map(lambda file_name: visual.ImageStim(window,
                                                     image = file_name,
                                                     color = (1,1,1),
-                                                    size = [160, 160],
+                                                    size = [150, 150],
                                                     pos = (maskPos,0)), frame_paths)
 
     for i in range(40):
