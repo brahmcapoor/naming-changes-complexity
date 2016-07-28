@@ -54,9 +54,9 @@ def staircase(window, image, transparency, dominant_eye):
     """
 
     if dominant_eye == "True":
-        maskPos = 220
+        maskPos = 200
     else:
-        maskPos = -220
+        maskPos = -200
     # Image stuff
     img = visual.ImageStim(window,
                            image = image,

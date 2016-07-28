@@ -16,13 +16,13 @@ def show_pair(mywin, path_string, name_1, name_2):
         name = pair_names[i-1]
 
         img_1 = visual.ImageStim(mywin, image = img_file, color=(1,1,1),
-                               size=[160, 160], pos =(-270,160))
-        label_1 = visual.TextStim(mywin, text=name, pos=(-270,70),
+                               size=[160, 160], pos =(-200,160))
+        label_1 = visual.TextStim(mywin, text=name, pos=(-200,70),
                                 alignHoriz='center', alignVert='center')
 
         img_2 = visual.ImageStim(mywin, image = img_file, color=(1,1,1),
-                               size=[160, 160], pos =(270,160))
-        label_2 = visual.TextStim(mywin, text=name, pos=(270,70),
+                               size=[160, 160], pos =(200,160))
+        label_2 = visual.TextStim(mywin, text=name, pos=(200,70),
                                 alignHoriz='center', alignVert='center')
 
         for frameN in range(120):
