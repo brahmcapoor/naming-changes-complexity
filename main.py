@@ -1,5 +1,6 @@
 from psychopy import visual, core, event,gui
 from random import shuffle
+from helpers import get_subject_info
 import training, testing
 
 """
@@ -40,8 +41,21 @@ def get_names(new_experiment = False):
 def main():
     new_experiment, subject_number = startup()
     names = get_names(new_experiment)
-    training.main(new_experiment, names, subject_number)
-    testing.main(new_experiment, subject_number)
+
+    round_num, dom_eye = get_subject_info(training = True,
+                                          subject_number = subject_number)
+
+
+    mywin = visual.Window([1680,1050],
+                          monitor = "testMonitor",
+                          units = "pix",
+                          rgb=(-1,-1,-1),
+                          fullscr = True)
+
+    training.main(mywin, new_experiment, names, subject_number, round_num, dom_eye)
+    testing.main(mywin, new_experiment, subject_number)
+
+    mywin.close()
 
 if __name__ == '__main__':
     main()

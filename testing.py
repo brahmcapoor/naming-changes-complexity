@@ -120,13 +120,7 @@ def write_to_csv(new_experiment, subject_number, difficulties, individual_result
         wr.writerow(data)
 
 
-def main(new_experiment =  True, subject_number = 1):
-
-    mywin = visual.Window([1920,1080],
-                          monitor = "testMonitor",
-                          units = "pix",
-                          rgb=(-1,-1,-1),
-                          fullscr = True)
+def main(mywin, new_experiment =  True, subject_number = 1):
 
     subject_info = retrieve_subject_info(subject_number)
     dominant_eye = subject_info[2]

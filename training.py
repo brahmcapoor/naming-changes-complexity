@@ -62,15 +62,12 @@ def get_chosen_pairs():
     data = read_csv('training_results.csv')
     return [subject[3] for subject in data]
 
-def main(new_experiment = True, names = ['Name 1', 'Name 2'], subject_number = 1):
+def main(mywin, new_experiment = True,
+                names = ['Name 1', 'Name 2'],
+                subject_number = 1,
+                round_num = 1,
+                dom_eye = True):
     #TODO: screensize
-
-    round_num, dom_eye = get_subject_info(training = True,
-                                          subject_number = subject_number)
-
-    #create window
-    mywin = visual.Window([1920,1080], monitor = "testMonitor",
-                          units = "pix", rgb=(-1,-1,-1), fullscr = True)
 
 
     chosen_pairs = get_chosen_pairs()
@@ -99,8 +96,6 @@ def main(new_experiment = True, names = ['Name 1', 'Name 2'], subject_number = 1
         difficulty_1 = "Difficult"
         difficulty_2 = "Easy"
 
-
-    mywin.close()
 
     write_to_file(new_experiment = new_experiment,
                   subject_number = subject_number,
