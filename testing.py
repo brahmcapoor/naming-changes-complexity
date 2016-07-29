@@ -1,5 +1,5 @@
 from psychopy import visual, core, event
-from psychopy.visual import Rect
+from psychopy.visual import Rect, Circle
 from random import sample
 from helpers import choose_pair, retrieve_subject_info, get_subject_info
 import os, csv
@@ -87,12 +87,29 @@ def staircase(window, image, transparency, dominant_eye):
     box_2.setAutoDraw(True)
 
     # Mask stuff
+
     frame_paths = ["Masks/" + file for file in os.listdir("Masks")]
     frames = map(lambda file_name: visual.ImageStim(window,
                                                     image = file_name,
                                                     color = (1,1,1),
                                                     size = [150, 150],
                                                     pos = (maskPos,150)), frame_paths)
+
+    #Fixation dot
+
+    fixation_dot_1 = Circle(win = window,
+                          radius = 2,
+                          fillColor = 'red',
+                          pos = (maskPos, 150),
+                          lineWidth = 0,
+                          autoDraw = True)
+
+    fixation_dot_2 = Circle(win = window,
+                          radius = 2,
+                          fillColor = 'red',
+                          pos = (-1 * maskPos, 150),
+                          lineWidth = 0,
+                          autoDraw = True)
 
     for i in range(40):
         transparency += step(window, transparency, img, frames)
