@@ -95,7 +95,7 @@ def staircase(window, image, transparency, dominant_eye):
                                                     size = [150, 150],
                                                     pos = (maskPos,150)), frame_paths)
 
-    #Fixation dot
+    #Fixation dot stuff
 
     fixation_dot_1 = Circle(win = window,
                           radius = 2,
