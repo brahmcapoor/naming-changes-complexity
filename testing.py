@@ -137,7 +137,7 @@ def write_to_csv(new_experiment, subject_number, difficulties, individual_result
         wr.writerow(data)
 
 
-def main(mywin, new_experiment =  True, subject_number = 1):
+def main(window, new_experiment =  True, subject_number = 1):
 
     subject_info = retrieve_subject_info(subject_number)
     dominant_eye = subject_info[2]
@@ -148,10 +148,10 @@ def main(mywin, new_experiment =  True, subject_number = 1):
     img_1 = pair_path + "1.png"
     img_2 = pair_path + "2.png"
 
-    result_10 = staircase(mywin, img_1, 0, dominant_eye)
-    result_11 = staircase(mywin, img_1, 1, dominant_eye)
-    result_20 = staircase(mywin, img_2, 0, dominant_eye)
-    result_21 = staircase(mywin, img_2, 1, dominant_eye)
+    result_10 = staircase(window, img_1, 0, dominant_eye)
+    result_11 = staircase(window, img_1, 1, dominant_eye)
+    result_20 = staircase(window, img_2, 0, dominant_eye)
+    result_21 = staircase(window, img_2, 1, dominant_eye)
 
     img_1_avg = (result_10 + result_11)/2
     img_2_avg = (result_20 + result_21)/2

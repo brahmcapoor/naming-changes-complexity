@@ -1,7 +1,7 @@
 from psychopy import visual, core, event,gui
 from random import shuffle
 from helpers import get_subject_info
-import training, testing
+import training, testing, memory
 
 """
 Main experimental harness
@@ -17,6 +17,7 @@ def startup():
     check.addField("Starting over?", False)
     check.addField("Subject Number", 1)
     check.show()
+
     return tuple(check.data)
 
 def get_names(new_experiment = False):
@@ -39,23 +40,24 @@ def get_names(new_experiment = False):
 
 
 def main():
-    new_experiment, subject_number = startup()
-    names = get_names(new_experiment)
+    # new_experiment, subject_number = startup()
+    # names = get_names(new_experiment)
+    #
+    # round_num, dom_eye = get_subject_info(training = True,
+    #                                       subject_number = subject_number)
 
-    round_num, dom_eye = get_subject_info(training = True,
-                                          subject_number = subject_number)
 
-
-    mywin = visual.Window([1680,1050],
+    window = visual.Window([1680,1050],
                           monitor = "testMonitor",
                           units = "pix",
                           rgb=(-1,-1,-1),
                           fullscr = True)
 
-    training.main(mywin, new_experiment, names, subject_number, round_num, dom_eye)
-    testing.main(mywin, new_experiment, subject_number)
+    # training.main(window, new_experiment, names, subject_number, round_num, dom_eye)
+    # testing.main(window, new_experiment, subject_number)
+    memory.main(window, 1)
+    window.close()
 
-    mywin.close()
 
 if __name__ == '__main__':
     main()

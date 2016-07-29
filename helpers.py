@@ -36,7 +36,7 @@ def choose_pair(i):
 
 def retrieve_subject_info(subject_number):
     """
-    Given the subject number, retrieves which pairs they saw from results.csv
+    Given the subject number, retrieves which pairs they saw from training_results.csv
     and the names
 
     returns a tuple representing the subject

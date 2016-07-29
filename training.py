@@ -6,7 +6,7 @@ import os
 import csv
 
 
-def show_pair(mywin, path_string, name_1, name_2):
+def show_pair(window, path_string, name_1, name_2):
     """
     Shows the pair of images on the screen, with a 2 second delay between images
     """
@@ -16,37 +16,37 @@ def show_pair(mywin, path_string, name_1, name_2):
         img_file = path_string + str(i) + ".png"
         name = pair_names[i-1]
 
-        img_1 = ImageStim(mywin,
+        img_1 = ImageStim(window,
                           image = img_file,
                           color=(1,1,1),
                           size=[160, 160],
                           pos =(-200,160))
 
-        label_1 = TextStim(mywin,
+        label_1 = TextStim(window,
                            text=name,
                            pos=(-200,70),
                            alignHoriz='center',
                            alignVert='center')
 
-        img_2 = ImageStim(mywin,
+        img_2 = ImageStim(window,
                           image = img_file,
                           color=(1,1,1),
                           size=[160, 160],
                           pos =(200,160))
 
-        label_2 = TextStim(mywin,
+        label_2 = TextStim(window,
                            text=name,
                            pos=(200,70),
                            alignHoriz='center',
                            alignVert='center')
 
-        fixation_dot_1 = Circle(win = mywin,
+        fixation_dot_1 = Circle(win = window,
                                 radius = 2,
                                 fillColor = 'red',
                                 pos = (-200, 160),
                                 lineWidth = 0)
 
-        fixation_dot_2 = Circle(win = mywin,
+        fixation_dot_2 = Circle(win = window,
                                 radius = 2,
                                 fillColor = 'red',
                                 pos = (200, 160),
@@ -59,7 +59,7 @@ def show_pair(mywin, path_string, name_1, name_2):
             label_2.draw()
             fixation_dot_1.draw()
             fixation_dot_2.draw()
-            mywin.flip()
+            window.flip()
         else:
             return
 
@@ -93,7 +93,7 @@ def get_chosen_pairs():
     data = read_csv('training_results.csv')
     return [subject[3] for subject in data]
 
-def main(mywin, new_experiment = True,
+def main(window, new_experiment = True,
                 names = ['Name 1', 'Name 2'],
                 subject_number = 1,
                 round_num = 1,
@@ -112,7 +112,7 @@ def main(mywin, new_experiment = True,
         pair_path = choose_pair(pair_num)
         name_pair = names[pair_num]
         name_1, name_2 = tuple(name_pair.split(" "))
-        show_pair(mywin, pair_path, name_1, name_2)
+        show_pair(window, pair_path, name_1, name_2)
         difficulty_1 = "Easy"
         difficulty_2 = "Difficult"
 
@@ -123,7 +123,7 @@ def main(mywin, new_experiment = True,
         pair_path = choose_pair(pair_num)
         name_pair = names[int(pair_num)]
         name_2, name_1 = tuple(name_pair.split(" "))
-        show_pair(mywin, pair_path, name_1, name_2)
+        show_pair(window, pair_path, name_1, name_2)
         difficulty_1 = "Difficult"
         difficulty_2 = "Easy"
 
