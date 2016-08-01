@@ -40,11 +40,11 @@ def get_names(new_experiment = False):
 
 
 def main():
-    # new_experiment, subject_number = startup()
-    # names = get_names(new_experiment)
-    #
-    # round_num, dom_eye = get_subject_info(training = True,
-    #                                       subject_number = subject_number)
+    new_experiment, subject_number = startup()
+    names = get_names(new_experiment)
+
+    round_num, dom_eye = get_subject_info(training = True,
+                                          subject_number = subject_number)
 
 
     window = visual.Window([1680,1050],
@@ -53,9 +53,9 @@ def main():
                           rgb=(-1,-1,-1),
                           fullscr = True)
 
-    # training.main(window, new_experiment, names, subject_number, round_num, dom_eye)
-    # testing.main(window, new_experiment, subject_number)
-    memory.main(window, 1)
+    training.main(window, new_experiment, names, subject_number, round_num, dom_eye)
+    testing.main(window, new_experiment, subject_number)
+    memory.main(window, new_experiment, 1)
     window.close()
 
 

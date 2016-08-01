@@ -44,7 +44,6 @@ def step(window, transparency, img, frames):
         return 0.02
 
 
-
 def staircase(window, image, transparency, dominant_eye):
     """
     Performs a single staircase to find the threshold of visibility for a
@@ -124,6 +123,7 @@ def write_to_csv(new_experiment, subject_number, difficulties, individual_result
     if new_experiment:
         if(os.path.exists('testing_results.csv')):
             os.remove('testing_results.csv')
+        
 
     data = [subject_number, difficulties, individual_results, first_average, second_average]
 
