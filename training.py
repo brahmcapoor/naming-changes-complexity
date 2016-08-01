@@ -27,23 +27,14 @@ def show_pair(window, path_string, name_1, name_2):
                            pos= (0,-250),
                            alignHoriz='center',
                            alignVert='center')
-
-        fixation_dot_1 = Circle(win = window,
-                                radius = 2,
-                                fillColor = 'red',
-                                pos = (0, 0),
-                                lineWidth = 0)
-
         img_1.setAutoDraw(True)
         label_1.setAutoDraw(True)
-        fixation_dot_1.setAutoDraw(True)
 
         for frameN in range(120):
             window.flip()
         else:
             img_1.setAutoDraw(False)
             label_1.setAutoDraw(False)
-            fixation_dot_1.setAutoDraw(False)
 
 def write_to_file(new_experiment, subject_number, round_num, dom_eye, pair_num, name_1, name_2,
                   difficulty_1, difficulty_2):
