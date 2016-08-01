@@ -123,7 +123,7 @@ def write_to_csv(new_experiment, subject_number, difficulties, individual_result
     if new_experiment:
         if(os.path.exists('testing_results.csv')):
             os.remove('testing_results.csv')
-        
+
 
     data = [subject_number, difficulties, individual_results, first_average, second_average]
 

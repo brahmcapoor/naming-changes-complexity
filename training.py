@@ -19,49 +19,31 @@ def show_pair(window, path_string, name_1, name_2):
         img_1 = ImageStim(window,
                           image = img_file,
                           color=(1,1,1),
-                          size=[160, 160],
-                          pos =(-200,160))
+                          size=[400, 400],
+                          pos =(0,0))
 
         label_1 = TextStim(window,
                            text=name,
-                           pos=(-200,70),
-                           alignHoriz='center',
-                           alignVert='center')
-
-        img_2 = ImageStim(window,
-                          image = img_file,
-                          color=(1,1,1),
-                          size=[160, 160],
-                          pos =(200,160))
-
-        label_2 = TextStim(window,
-                           text=name,
-                           pos=(200,70),
+                           pos= (0,-250),
                            alignHoriz='center',
                            alignVert='center')
 
         fixation_dot_1 = Circle(win = window,
                                 radius = 2,
                                 fillColor = 'red',
-                                pos = (-200, 160),
+                                pos = (0, 0),
                                 lineWidth = 0)
 
-        fixation_dot_2 = Circle(win = window,
-                                radius = 2,
-                                fillColor = 'red',
-                                pos = (200, 160),
-                                lineWidth = 0)
+        img_1.setAutoDraw(True)
+        label_1.setAutoDraw(True)
+        fixation_dot_1.setAutoDraw(True)
 
         for frameN in range(120):
-            img_1.draw()
-            label_1.draw()
-            img_2.draw()
-            label_2.draw()
-            fixation_dot_1.draw()
-            fixation_dot_2.draw()
             window.flip()
         else:
-            return
+            img_1.setAutoDraw(False)
+            label_1.setAutoDraw(False)
+            fixation_dot_1.setAutoDraw(False)
 
 def write_to_file(new_experiment, subject_number, round_num, dom_eye, pair_num, name_1, name_2,
                   difficulty_1, difficulty_2):
