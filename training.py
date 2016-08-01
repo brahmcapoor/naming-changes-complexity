@@ -80,7 +80,6 @@ def main(window, new_experiment = True,
                 subject_number = 1,
                 round_num = 1,
                 dom_eye = True):
-    #TODO: screensize
 
 
     chosen_pairs = get_chosen_pairs()
