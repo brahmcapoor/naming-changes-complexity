@@ -119,7 +119,8 @@ def staircase(window, image, transparency, dominant_eye):
                                                     image = file_name,
                                                     color = (1,1,1),
                                                     size = [150, 150],
-                                                    pos = (maskPos,150)), frame_paths)
+                                                    pos = (maskPos,150),
+                                                    opacity = 0.2), frame_paths)
 
     #Fixation dot stuff
 
@@ -148,6 +149,8 @@ def staircase(window, image, transparency, dominant_eye):
     box_2.setAutoDraw = False
     fixation_dot_1.setAutoDraw = False
     fixation_dot_2.setAutoDraw = False
+
+    window.flip()
 
     return transparency
 
@@ -192,6 +195,8 @@ def main(window, new_experiment =  True, subject_number = 1):
 
     for index, result in enumerate(results):
         results[index] = staircase(*result)
+
+    result_10, result_11, result_20, result_21 = tuple(results)
 
     img_1_avg = (result_10 + result_11)/2
     img_2_avg = (result_20 + result_21)/2
