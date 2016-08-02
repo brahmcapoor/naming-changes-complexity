@@ -13,6 +13,8 @@ def step(window, transparency, img, frames):
     key, meaning the stimulus must be more transparent in the next presentation
     """
 
+    pressToContinue(window)
+    
     img.setOpacity(transparency)
     img.setAutoDraw(True)
 
@@ -37,8 +39,6 @@ def step(window, transparency, img, frames):
     window.flip()
 
     keys = event.waitKeys(maxWait = 2)
-
-    pressToContinue(window)
 
     if keys:
         return -0.02
@@ -143,6 +143,12 @@ def staircase(window, image, transparency, dominant_eye):
             transparency = 1
         if transparency < 0:
             transparency = 0
+
+    box_1.setAutoDraw = False
+    box_2.setAutoDraw = False
+    fixation_dot_1.setAutoDraw = False
+    fixation_dot_2.setAutoDraw = False
+
     return transparency
 
 def write_to_csv(new_experiment, subject_number, difficulties, individual_results, first_average, second_average):
