@@ -1,5 +1,5 @@
 from psychopy import visual, core, event
-from psychopy.visual import Rect, Circle
+from psychopy.visual import Rect, Circle, ImageStim, TextStim
 from random import sample
 from helpers import choose_pair, retrieve_subject_info, get_subject_info
 import os, csv
@@ -38,10 +38,37 @@ def step(window, transparency, img, frames):
 
     keys = event.waitKeys(maxWait = 2)
 
+    pressToContinue(window)
+
     if keys:
         return -0.02
     else:
         return 0.02
+
+
+def pressToContinue(window):
+    """
+    Implements "Press to continue" between trials
+    """
+
+    text_1 = TextStim(win = window,
+                      text = "Press space to \ncontinue",
+                      pos= (200, 150),
+                      alignHoriz = 'center',
+                      alignVert = 'center')
+
+    text_2 = TextStim(win = window,
+                      text = "Press space to \ncontinue",
+                      pos = (-200,150),
+                      alignHoriz = 'center',
+                      alignVert = 'center')
+
+    text_1.draw()
+    text_2.draw()
+
+    window.flip()
+    event.waitKeys()
+    window.flip()
 
 
 def staircase(window, image, transparency, dominant_eye):
@@ -57,7 +84,7 @@ def staircase(window, image, transparency, dominant_eye):
     else:
         maskPos = -200
     # Image stuff
-    img = visual.ImageStim(window,
+    img = ImageStim(window,
                            image = image,
                            color=(1,1,1),
                            size = [130,130],
@@ -88,7 +115,7 @@ def staircase(window, image, transparency, dominant_eye):
     # Mask stuff
 
     frame_paths = ["Masks/" + file for file in os.listdir("Masks")]
-    frames = map(lambda file_name: visual.ImageStim(window,
+    frames = map(lambda file_name: ImageStim(window,
                                                     image = file_name,
                                                     color = (1,1,1),
                                                     size = [150, 150],
