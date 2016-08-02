@@ -190,8 +190,8 @@ def main(window, new_experiment =  True, subject_number = 1):
 
     shuffle(results)
 
-    for result in results:
-        result = staircase(*result)
+    for index, result in enumerate(results):
+        results[index] = staircase(*result)
 
     img_1_avg = (result_10 + result_11)/2
     img_2_avg = (result_20 + result_21)/2
