@@ -60,7 +60,7 @@ def staircase(window, image, transparency, dominant_eye):
     img = visual.ImageStim(window,
                            image = image,
                            color=(1,1,1),
-                           size = [80,80],
+                           size = [130,130],
                            pos = (-1 * maskPos,150),
                            opacity = transparency)
 

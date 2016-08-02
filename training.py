@@ -26,11 +26,12 @@ def show_pair(window, path_string, name_1, name_2):
                            text=name,
                            pos= (0,-250),
                            alignHoriz='center',
-                           alignVert='center')
+                           alignVert='center',
+                           height = 50)
         img_1.setAutoDraw(True)
         label_1.setAutoDraw(True)
 
-        for frameN in range(120):
+        for frameN in range(600):
             window.flip()
         else:
             img_1.setAutoDraw(False)

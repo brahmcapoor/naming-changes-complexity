@@ -9,7 +9,8 @@ def get_user_input(window, name):
     input_name = ""
     user_input = TextStim(win = window,
                           text = input_name,
-                          pos = (0, -150))
+                          pos = (0, -150),
+                          height = 50)
 
     user_input.setAutoDraw(True)
     window.flip()
