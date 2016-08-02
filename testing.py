@@ -1,6 +1,6 @@
 from psychopy import visual, core, event
 from psychopy.visual import Rect, Circle, ImageStim, TextStim
-from random import sample
+from random import sample, shuffle
 from helpers import choose_pair, retrieve_subject_info, get_subject_info
 import os, csv
 
@@ -14,7 +14,7 @@ def step(window, transparency, img, frames):
     """
 
     pressToContinue(window)
-    
+
     img.setOpacity(transparency)
     img.setAutoDraw(True)
 
@@ -181,10 +181,17 @@ def main(window, new_experiment =  True, subject_number = 1):
     img_1 = pair_path + "1.png"
     img_2 = pair_path + "2.png"
 
-    result_10 = staircase(window, img_1, 0, dominant_eye)
-    result_11 = staircase(window, img_1, 1, dominant_eye)
-    result_20 = staircase(window, img_2, 0, dominant_eye)
-    result_21 = staircase(window, img_2, 1, dominant_eye)
+    result_10 = (window, img_1, 0, dominant_eye)
+    result_11 = (window, img_1, 1, dominant_eye)
+    result_20 = (window, img_2, 0, dominant_eye)
+    result_21 = (window, img_2, 1, dominant_eye)
+
+    results = [result_10, result_11, result_20, result_21]
+
+    shuffle(results)
+
+    for result in results:
+        result = staircase(*result)
 
     img_1_avg = (result_10 + result_11)/2
     img_2_avg = (result_20 + result_21)/2
