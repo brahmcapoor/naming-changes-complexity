@@ -1,6 +1,7 @@
 from psychopy import visual, core, event,gui
-from random import shuffle
-from helpers import get_subject_info
+from random import shuffle, randint
+from helpers import get_subject_info, read_csv, choose_pair
+from experiment_objects import Image, ImagePair
 import training, testing, memory
 
 """
@@ -38,6 +39,13 @@ def get_names(new_experiment = False):
 
     return names
 
+def get_chosen_pairs():
+    """
+    Returns all the pair numbers that have already been chosen
+    """
+    data = read_csv('training_results.csv')
+    return [subject[3] for subject in data]
+
 
 def main():
     new_experiment, subject_number = startup()
@@ -46,6 +54,26 @@ def main():
     round_num, dom_eye = get_subject_info(training = True,
                                           subject_number = subject_number)
 
+    chosen_pairs = get_chosen_pairs()
+
+    pair_num = None
+    name_pair = None
+
+    if subject_number % 2 != 0 or round_num != 1:
+        while True:
+            pair_num = randint(1,8)
+            if str(pair_num) not in chosen_pairs:
+                break
+        pair_path = choose_pair(pair_num)
+        name_pair = names[randint(1,8)]
+        name_pair = name_pair.split(" ")
+
+    else:
+        last_subject = retrieve_subject_info(subject_number - 1)
+        pair_num = last_subject[3]
+        pair_path = choose_pair(pair_num)
+        name_pair = [last_subject[5], last_subject[4]]
+
 
     window = visual.Window([1680,1050],
                           monitor = "testMonitor",
@@ -53,7 +81,10 @@ def main():
                           rgb=(-1,-1,-1),
                           fullscr = True)
 
-    training.main(window, new_experiment, names, subject_number, round_num, dom_eye)
+    subject_image_pair = ImagePair(pair_path, name_pair)
+
+    training.main(window, new_experiment, subject_number, subject_image_pair,
+                  round_num, dom_eye, pair_num)
     testing.main(window, new_experiment, subject_number)
     memory.main(window, new_experiment, 1)
     window.close()

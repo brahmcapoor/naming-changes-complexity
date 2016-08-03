@@ -116,11 +116,11 @@ def staircase(window, image, transparency, dominant_eye):
 
     frame_paths = ["Masks/" + file for file in os.listdir("Masks")]
     frames = map(lambda file_name: ImageStim(window,
-                                                    image = file_name,
-                                                    color = (1,1,1),
-                                                    size = [150, 150],
-                                                    pos = (maskPos,150),
-                                                    opacity = 0.2), frame_paths)
+                                            image = file_name,
+                                            color = (1,1,1),
+                                            size = [150, 150],
+                                            pos = (maskPos,150),
+                                            opacity = 0.2), frame_paths)
 
     #Fixation dot stuff
 
