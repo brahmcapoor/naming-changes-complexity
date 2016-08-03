@@ -79,7 +79,7 @@ def main(window, new_experiment = True,
     if subject_number % 2 != 0 or round_num != 1:
         #Choose a new pair
         while True:
-            pair_num = randint(1,16)
+            pair_num = randint(1,8)
             if str(pair_num) not in chosen_pairs:
                 break
         pair_path = choose_pair(pair_num)
