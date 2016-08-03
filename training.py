@@ -6,7 +6,7 @@ import os
 import csv
 
 
-def show_pair(window, path_string, name_1, name_2):
+def show_pair_with_names(window, path_string, name_1, name_2):
     """
     Shows the pair of images on the screen, with a 2 second delay between images
     """
@@ -28,6 +28,7 @@ def show_pair(window, path_string, name_1, name_2):
                            alignHoriz='center',
                            alignVert='center',
                            height = 50)
+
         img_1.setAutoDraw(True)
         label_1.setAutoDraw(True)
 
@@ -36,6 +37,17 @@ def show_pair(window, path_string, name_1, name_2):
         else:
             img_1.setAutoDraw(False)
             label_1.setAutoDraw(False)
+
+def show_both_images(window, path_string):
+    """
+    Shows both images in the pair for 10s, without their corresponding names
+    """
+
+    img_1_path = path_string + "1.png"
+    img_2_path = path_string + "2.png"
+
+
+    pass
 
 def write_to_file(new_experiment, subject_number, round_num, dom_eye, pair_num, name_1, name_2,
                   difficulty_1, difficulty_2):
@@ -67,6 +79,7 @@ def get_chosen_pairs():
     data = read_csv('training_results.csv')
     return [subject[3] for subject in data]
 
+
 def main(window, new_experiment = True,
                 names = ['Name 1', 'Name 2'],
                 subject_number = 1,
@@ -96,7 +109,7 @@ def main(window, new_experiment = True,
         pair_path = choose_pair(pair_num)
         name_pair = names[int(pair_num)]
         name_2, name_1 = tuple(name_pair.split(" "))
-        show_pair(window, pair_path, name_1, name_2)
+        show_pair_with_names(window, pair_path, name_1, name_2)
         difficulty_1 = "Difficult"
         difficulty_2 = "Easy"
 
