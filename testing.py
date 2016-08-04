@@ -40,6 +40,7 @@ def step(window, transparency, img, frames):
 
     keys = event.waitKeys(maxWait = 2)
 
+    img.setAutoDraw(False)
     if keys:
         return -0.02
     else:
@@ -134,17 +135,17 @@ def staircase(window, image, transparency, dominant_eye):
                           lineWidth = 0,
                           autoDraw = True)
 
-    for i in range(1):
+    for i in range(40):
         transparency += step(window, transparency, img, frames)
         if transparency > 1:
             transparency = 1
         if transparency < 0:
             transparency = 0
 
-    box_1.setAutoDraw = False
-    box_2.setAutoDraw = False
-    fixation_dot_1.setAutoDraw = False
-    fixation_dot_2.setAutoDraw = False
+    box_1.setAutoDraw(False)
+    box_2.setAutoDraw (False)
+    fixation_dot_1.setAutoDraw(False)
+    fixation_dot_2.setAutoDraw(False)
 
     window.flip()
 
