@@ -42,39 +42,27 @@ def show_both_images(window, images):
         window.flip()
 
 
-def write_to_file(new_experiment, subject_number, round_num, dom_eye, pair_num, name_1, name_2):
+def write_to_file(subject_number, round_num, dom_eye, pair_num, name_1, name_2):
     """
     Writes subject and pairs to results.csv
     """
-    if new_experiment:
-        if(os.path.exists('training_results.csv')):
-            os.remove('training_results.csv')
     subject_data = [subject_number, round_num, dom_eye, pair_num, name_1, name_2]
 
     with open('training_results.csv', 'ab') as f:
         wr = csv.writer(f, quoting=csv.QUOTE_ALL)
-
-        if new_experiment:
-            header = ["Subject Number", "Round Number", "Dominant Eye",
-                      "Pair Number", "Name 1", "Name 2"]
-            wr.writerow(header)
-
         wr.writerow(subject_data)
 
 
+def main(window, trial):
 
-def main(window, new_experiment, subject_number, image_pair,
-         round_num, dom_eye, pair_num):
-
-    images = image_pair.images
+    images = trial.image_pair.images
     show_both_images(window, images)
     show_pair_with_names(window, images)
 
-    write_to_file(new_experiment = new_experiment,
-                  subject_number = subject_number,
-                  round_num = round_num,
-                  dom_eye = dom_eye,
-                  pair_num = pair_num,
+    write_to_file(subject_number = trial.subject_number,
+                  round_num = trial.round_number,
+                  dom_eye = trial.dominant_eye,
+                  pair_num = trial.pair_num,
                   name_1 = images[0].name,
                   name_2 = images[1].name)
 

@@ -45,7 +45,6 @@ def step(window, transparency, img, frames):
     else:
         return 0.02
 
-
 def pressToContinue(window):
     """
     Implements "Press to continue" between trials
@@ -70,7 +69,6 @@ def pressToContinue(window):
     event.waitKeys()
     window.flip()
 
-
 def staircase(window, image, transparency, dominant_eye):
     """
     Performs a single staircase to find the threshold of visibility for a
@@ -84,12 +82,10 @@ def staircase(window, image, transparency, dominant_eye):
     else:
         maskPos = -200
     # Image stuff
-    img = ImageStim(window,
-                           image = image,
-                           color=(1,1,1),
-                           size = [130,130],
-                           pos = (-1 * maskPos,150),
-                           opacity = transparency)
+
+    img = image.stimulus(window,
+                         position = (-1 * maskPos, 150),
+                         transparency = transparency)
 
     # Fusion box stuff
 
@@ -138,7 +134,7 @@ def staircase(window, image, transparency, dominant_eye):
                           lineWidth = 0,
                           autoDraw = True)
 
-    for i in range(40):
+    for i in range(1):
         transparency += step(window, transparency, img, frames)
         if transparency > 1:
             transparency = 1
@@ -154,35 +150,25 @@ def staircase(window, image, transparency, dominant_eye):
 
     return transparency
 
-def write_to_csv(new_experiment, subject_number, difficulties, individual_results, first_average, second_average):
+def write_to_csv(subject_number, individual_results, first_average, second_average):
 
-    if new_experiment:
-        if(os.path.exists('testing_results.csv')):
-            os.remove('testing_results.csv')
-
-
-    data = [subject_number, difficulties, individual_results, first_average, second_average]
+    data = [subject_number, individual_results, first_average, second_average]
 
     with open('testing_results.csv', 'ab') as f:
         wr = csv.writer(f, quoting=csv.QUOTE_ALL)
-
-        if new_experiment:
-            header = ["Subject Number", "Difficulties", "Individual results", "Image 1 Average", "Image 2 Average"]
-            wr.writerow(header)
-
         wr.writerow(data)
 
 
-def main(window, new_experiment =  True, subject_number = 1):
+def main(window, trial):
 
-    subject_info = retrieve_subject_info(subject_number)
-    dominant_eye = subject_info[2]
-    pair_num = subject_info[3]
-    difficulties = (subject_info[6], subject_info[7])
 
-    pair_path = choose_pair(pair_num)
-    img_1 = pair_path + "1.png"
-    img_2 = pair_path + "2.png"
+    dominant_eye = trial.dominant_eye
+    pair_num = trial.pair_num
+
+    images = trial.image_pair.images
+
+    img_1 = images[0]
+    img_2 = images[1]
 
     result_10 = (window, img_1, 0, dominant_eye)
     result_11 = (window, img_1, 1, dominant_eye)
@@ -203,7 +189,7 @@ def main(window, new_experiment =  True, subject_number = 1):
 
     individual_results = [result_10, result_11, result_20, result_21]
 
-    write_to_csv(new_experiment, subject_number, difficulties, individual_results, img_1_avg, img_2_avg)
+    write_to_csv(trial.subject_number, individual_results, img_1_avg, img_2_avg)
 
 if __name__ == "__main__":
     main()

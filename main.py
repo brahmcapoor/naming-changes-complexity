@@ -1,8 +1,8 @@
 from psychopy import visual, core, event,gui
 from random import shuffle, randint
 from helpers import get_subject_info, read_csv, choose_pair
-from experiment_objects import Image, ImagePair
-import training, testing, memory
+from experiment_objects import Image, ImagePair, Trial
+import training, testing, memory, os, csv
 
 """
 Main experimental harness
@@ -46,9 +46,32 @@ def get_chosen_pairs():
     data = read_csv('training_results.csv')
     return [subject[3] for subject in data]
 
+def setup_files():
+    """
+    Clears the csv results files
+    """
+    if os.path.isfile("training_results.csv"):
+        os.remove("training_results.csv")
+    if os.path.isfile("testing_results.csv"):
+        os.remove("testing_results.csv")
+
+    with open("training_results.csv", 'wb') as f:
+        wr = csv.writer(f, quoting=csv.QUOTE_ALL)
+
+        header = ["Subject Number", "Round Number", "Dominant Eye",
+                  "Pair Number", "Name 1", "Name 2"]
+        wr.writerow(header)
+
+
+    open("testing_results.csv", 'w').close()
+
 
 def main():
     new_experiment, subject_number = startup()
+
+    if new_experiment:
+        setup_files()
+
     names = get_names(new_experiment)
 
     round_num, dom_eye = get_subject_info(training = True,
@@ -82,10 +105,11 @@ def main():
                           fullscr = True)
 
     subject_image_pair = ImagePair(pair_path, name_pair)
+    trial = Trial(subject_number, round_num, dom_eye, subject_image_pair,
+                  pair_num)
 
-    training.main(window, new_experiment, subject_number, subject_image_pair,
-                  round_num, dom_eye, pair_num)
-    testing.main(window, new_experiment, subject_number)
+    training.main(window, trial)
+    testing.main(window, trial)
     memory.main(window, new_experiment, 1)
     window.close()
 
