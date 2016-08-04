@@ -5,6 +5,7 @@ import os, csv
 
 
 def test_image(window, name, image):
+    #TODO: Feedback
     image.setAutoDraw(True)
     window.flip()
     name = get_user_input(window, (0,-150))
@@ -28,7 +29,7 @@ def write_to_csv(new_experiment, subject_number, name_1, remembered_name_1,
 
 
 def main(window, trial):
-
+    #TODO: Return boolean with all correct or not
 
     pair_num = trial.pair_num
     img_1 = trial.image_pair.images[0]
