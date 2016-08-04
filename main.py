@@ -54,6 +54,8 @@ def setup_files():
         os.remove("training_results.csv")
     if os.path.isfile("testing_results.csv"):
         os.remove("testing_results.csv")
+    if os.path.isfile("memory.csv"):
+        os.remove("memory.csv")
 
     with open("training_results.csv", 'wb') as f:
         wr = csv.writer(f, quoting=csv.QUOTE_ALL)
@@ -62,8 +64,16 @@ def setup_files():
                   "Pair Number", "Name 1", "Name 2"]
         wr.writerow(header)
 
+    with open("testing_results.csv", 'wb') as f:
+        wr = csv.writer(f, quoting=csv.QUOTE_ALL)
 
-    open("testing_results.csv", 'w').close()
+        header = ["Subject Number",  "Individual results", "Image 1 Average", "Image 2 Average", "Names"]
+
+        wr.writerow(header)
+
+    with open("memory_results.csv", 'wb') as f:
+        header = ["Subject Number", "Name 1", "Remembered Name 1", "Name 2", "Remembered Name 2"]
+        wr.writerow(header)
 
 
 def main():

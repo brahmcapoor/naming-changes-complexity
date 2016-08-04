@@ -151,9 +151,9 @@ def staircase(window, image, transparency, dominant_eye):
 
     return transparency
 
-def write_to_csv(subject_number, individual_results, first_average, second_average):
+def write_to_csv(trial, individual_results, first_average, second_average):
 
-    data = [subject_number, individual_results, first_average, second_average]
+    data = [trial.subject_number, individual_results, first_average, second_average, [image.name for image in trial.image_pair.images]]
 
     with open('testing_results.csv', 'ab') as f:
         wr = csv.writer(f, quoting=csv.QUOTE_ALL)
@@ -190,7 +190,7 @@ def main(window, trial):
 
     individual_results = [result_10, result_11, result_20, result_21]
 
-    write_to_csv(trial.subject_number, individual_results, img_1_avg, img_2_avg)
+    write_to_csv(trial, individual_results, img_1_avg, img_2_avg)
 
 if __name__ == "__main__":
     main()

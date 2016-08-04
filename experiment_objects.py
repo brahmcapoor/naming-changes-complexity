@@ -17,7 +17,6 @@ class Image():
 
         return image
 
-    def label(self, window, position, fontsize = 50):
 
         label = visual.TextStim(win = window,
                                 text = self.name,
