@@ -5,28 +5,20 @@ import os, csv
 
 
 def test_image(window, name, image):
-    image = ImageStim(win = window,
-                      image = image,
-                      color = (1,1,1),
-                      size = [200, 200],
-                      pos = (0,0))
-
     image.setAutoDraw(True)
     window.flip()
-
     name = get_user_input(window, (0,-150))
+    image.setAutoDraw(False)
+
     return name
 
 
 def write_to_csv(new_experiment, subject_number, name_1, remembered_name_1,
-                 name_2, remembered_name_2):
+                 name_2, remembered_name_2, foil_name_1, foil_name_2):
 
-    if new_experiment:
-        if os.path.exists("memory_results.csv"):
-            os.remove("memory_results.csv")
 
     data = [subject_number, name_1, remembered_name_1, name_2,
-            remembered_name_2]
+            remembered_name_2, foil_name_1, foil_name_2]
 
     with open("memory_results.csv", 'ab') as f:
         wr = csv.writer(f, quoting=csv.QUOTE_ALL)
@@ -37,22 +29,33 @@ def write_to_csv(new_experiment, subject_number, name_1, remembered_name_1,
 
 def main(window, trial):
 
-    subject = retrieve_subject_info(subject_number)
+
     pair_num = trial.pair_num
     img_1 = trial.image_pair.images[0]
-    img_2 = trial.image_pair.iamges[1]
+    img_2 = trial.image_pair.images[1]
     name_1 = img_1.name
     name_2 = img_2.name
 
+    pic_1 = img_1.stimulus(window, size = 200)
+    foil_1 = img_1.foil(window)
 
-    remembered_name_1 = test_image(window, name_1, img_1)
-    remembered_name_2 = test_image(window, name_2, img_2)
+    pic_2 = img_2.stimulus(window, size = 200)
+    foil_2 = img_2.foil(window)
+
+
+    remembered_name_1 = test_image(window, name_1, pic_1)
+    foil_name_1 = test_image(window, "NA", foil_1)
+
+    remembered_name_2 = test_image(window, name_2, pic_2)
+    foil_name_2 = test_image(window, foil_2)
 
     write_to_csv(subject_number = subject_number,
                  name_1 = name_1,
                  remembered_name_1 = remembered_name_1,
                  name_2 = name_2,
-                 remembered_name_2 = remembered_name_2)
+                 remembered_name_2 = remembered_name_2,
+                 foil_name_1 = foil_name_1,
+                 foil_name_2 = foil_name_2)
 
 
 

@@ -72,7 +72,8 @@ def setup_files():
         wr.writerow(header)
 
     with open("memory_results.csv", 'wb') as f:
-        header = ["Subject Number", "Name 1", "Remembered Name 1", "Name 2", "Remembered Name 2"]
+        wr = csv.writer(f, quoting=csv.QUOTE_ALL)
+        header = ["Subject Number", "Name 1", "Remembered Name 1", "Name 2", "Remembered Name 2", "Foil Name 1", "Foil Name 2"]
         wr.writerow(header)
 
 
@@ -119,6 +120,7 @@ def main():
                   pair_num)
 
     training.main(window, trial)
+    memory.main(window,trial)
     testing.main(window, trial)
     memory.main(window, trial)
     window.close()

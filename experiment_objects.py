@@ -17,6 +17,7 @@ class Image():
 
         return image
 
+    def label(self, window, position, fontsize = 50):
 
         label = visual.TextStim(win = window,
                                 text = self.name,
@@ -26,6 +27,17 @@ class Image():
                                 height = fontsize)
 
         return label
+
+    def foil(self, window, position = (0,0), size = 200):
+        foil_path = self.path[:-4] + "_mask.png"
+
+        foil = visual.ImageStim(win = window,
+                                image = foil_path,
+                                color = (1,1,1),
+                                size = [size, size],
+                                pos = position)
+
+        return foil
 
 
 class ImagePair():
