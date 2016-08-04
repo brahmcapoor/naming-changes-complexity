@@ -1,4 +1,5 @@
-from psychopy import gui
+from psychopy import visual, gui, event
+from psychopy.visual import TextStim
 import csv
 import ast
 
@@ -59,3 +60,30 @@ def read_csv(filename):
         data = list(reader)
 
     return data[1:]
+
+
+def get_user_input(window, position, fontsize = 50):
+
+    input_name = ""
+    user_input = TextStim(win = window,
+                          text = input_name,
+                          pos = position,
+                          height = fontsize)
+
+    user_input.setAutoDraw(True)
+    window.flip()
+
+    while True:
+        char = event.waitKeys()[0]
+        if char.isalpha() and len(char) == 1:
+            input_name += char
+        if char ==  'return':
+            user_input.setAutoDraw(False)
+            window.flip()
+            return input_name
+        if char == 'comma':
+            input_name = input_name[:-1]
+
+
+        user_input.text = input_name
+        window.flip()

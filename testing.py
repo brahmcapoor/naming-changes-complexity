@@ -135,7 +135,7 @@ def staircase(window, image, transparency, dominant_eye):
                           lineWidth = 0,
                           autoDraw = True)
 
-    for i in range(40):
+    for i in range(1):
         transparency += step(window, transparency, img, frames)
         if transparency > 1:
             transparency = 1

@@ -1,35 +1,7 @@
 from psychopy import visual, core, event
 from psychopy.visual import ImageStim, TextStim
-from helpers import retrieve_subject_info, choose_pair
+from helpers import retrieve_subject_info, choose_pair, get_user_input
 import os, csv
-
-def get_user_input(window, name):
-
-
-    input_name = ""
-    user_input = TextStim(win = window,
-                          text = input_name,
-                          pos = (0, -150),
-                          height = 50)
-
-    user_input.setAutoDraw(True)
-    window.flip()
-
-    while True:
-        char = event.waitKeys()[0]
-        if char.isalpha() and len(char) == 1:
-            input_name += char
-        if char ==  'return':
-            user_input.setAutoDraw(False)
-            window.flip()
-            return input_name
-        if char == 'comma':
-            input_name = input_name[:-1]
-
-
-        user_input.text = input_name
-        window.flip()
-
 
 
 def test_image(window, name, image):
@@ -42,7 +14,7 @@ def test_image(window, name, image):
     image.setAutoDraw(True)
     window.flip()
 
-    name = get_user_input(window, name)
+    name = get_user_input(window, (0,-150))
     return name
 
 
@@ -68,7 +40,7 @@ def write_to_csv(new_experiment, subject_number, name_1, remembered_name_1,
 
 
 
-def main(window, new_experiment, subject_number):
+def main(window, trial):
 
     subject = retrieve_subject_info(subject_number)
     pair_num = subject[3]

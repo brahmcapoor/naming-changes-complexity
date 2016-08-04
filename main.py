@@ -110,7 +110,7 @@ def main():
 
     training.main(window, trial)
     testing.main(window, trial)
-    memory.main(window, new_experiment, 1)
+    memory.main(window, trial)
     window.close()
 
 
