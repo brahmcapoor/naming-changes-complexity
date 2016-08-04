@@ -48,7 +48,7 @@ def main(window, trial):
     foil_name_1 = test_image(window, "NA", foil_1)
 
     remembered_name_2 = test_image(window, name_2, pic_2)
-    foil_name_2 = test_image(window, foil_2)
+    foil_name_2 = test_image(window, "NA", foil_2)
 
     write_to_csv(subject_number = subject_number,
                  name_1 = name_1,
