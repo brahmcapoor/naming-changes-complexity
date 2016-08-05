@@ -1,6 +1,6 @@
 from psychopy import visual, core, event
 from psychopy.visual import Rect, Circle, ImageStim, TextStim
-from random import sample, shuffle
+from random import sample
 from helpers import choose_pair, retrieve_subject_info, get_subject_info
 import os, csv
 
@@ -178,10 +178,8 @@ def main(window, trial):
 
     results = [result_10, result_11, result_20, result_21]
 
-    shuffle(results)
-
-    for index, result in enumerate(results):
-        results[index] = staircase(*result)
+    for index in sample([0,1,2,3], 4):
+        results[index] = staircase(*results[index])
 
     result_10, result_11, result_20, result_21 = tuple(results)
 

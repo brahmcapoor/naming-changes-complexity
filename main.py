@@ -50,13 +50,6 @@ def setup_files():
     """
     Clears the csv results files
     """
-    if os.path.isfile("training_results.csv"):
-        os.remove("training_results.csv")
-    if os.path.isfile("testing_results.csv"):
-        os.remove("testing_results.csv")
-    if os.path.isfile("memory.csv"):
-        os.remove("memory.csv")
-
     with open("training_results.csv", 'wb') as f:
         wr = csv.writer(f, quoting=csv.QUOTE_ALL)
 
@@ -71,11 +64,15 @@ def setup_files():
 
         wr.writerow(header)
 
-    with open("memory_results.csv", 'wb') as f:
+    with open("memory_results_before.csv", 'wb') as f:
         wr = csv.writer(f, quoting=csv.QUOTE_ALL)
-        header = ["Subject Number", "Name 1", "Remembered Name 1", "Name 2", "Remembered Name 2", "Foil Name 1", "Foil Name 2"]
+        header = ["Subject Number", "Round Number", "Name 1", "Remembered Name 1", "Name 2", "Remembered Name 2", "Foil Name 1", "Foil Name 2"]
         wr.writerow(header)
 
+    with open("memory_results_after.csv", 'wb') as f:
+        wr = csv.writer(f, quoting=csv.QUOTE_ALL)
+        header = ["Subject Number", "Round number", "Name 1", "Remembered Name 1", "Name 2", "Remembered Name 2", "Foil Name 1", "Foil Name 2"]
+        wr.writerow(header)
 
 def main():
     new_experiment, subject_number = startup()
@@ -88,24 +85,18 @@ def main():
     round_num, dom_eye = get_subject_info(training = True,
                                           subject_number = subject_number)
 
-    chosen_pairs = get_chosen_pairs()
 
     pair_num = None
     name_pair = None
 
     if subject_number % 2 != 0 or round_num != 1:
-        while True:
-            pair_num = randint(1,8)
-            if str(pair_num) not in chosen_pairs:
-                break
+        pair_num = randint(1,8)
         pair_path = choose_pair(pair_num)
-        name_pair = names[randint(1,8)]
-        name_pair = name_pair.split(" ")
+        name_pair = names[randint(1,8)].split(" ")
 
     else:
         last_subject = retrieve_subject_info(subject_number - 1)
-        pair_num = last_subject[3]
-        pair_path = choose_pair(pair_num)
+        pair_path = choose_pair(last_subject[3])
         name_pair = [last_subject[5], last_subject[4]]
 
 
@@ -119,10 +110,22 @@ def main():
     trial = Trial(subject_number, round_num, dom_eye, subject_image_pair,
                   pair_num)
 
-    training.main(window, trial)
-    memory.main(window,trial)
+    while True:
+        training.main(window, trial)
+        if memory.main(window,trial):
+            break
+        else:
+            round_num = trial.round_number + 1
+            pair_num = randint(1,8)
+            pair_path = choose_pair(pair_num)
+            name_pair = names[randint(1,8)].split(" ")
+
+            subject_image_pair = ImagePair(pair_path, name_pair)
+            trial = Trial(subject_number, round_num, dom_eye,
+                          subject_image_pair, pair_num)
+
     testing.main(window, trial)
-    memory.main(window, trial)
+    memory.main(window, trial, True)
     window.close()
 
 
