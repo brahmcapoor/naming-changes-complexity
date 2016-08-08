@@ -141,7 +141,7 @@ def main():
             round_num = trial.round_number + 1
             pair_num = randint(1,8)
             pair_path = choose_pair(pair_num)
-            name_pair = names[randint(1,8)].split(" ")
+            name_pair = names[randint(0,7)].split(" ")
 
             subject_image_pair = ImagePair(pair_path, name_pair)
             trial = Trial(subject_number, round_num, dom_eye,
