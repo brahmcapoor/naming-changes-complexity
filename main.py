@@ -3,7 +3,7 @@ from psychopy.visual import TextStim
 from random import shuffle, randint
 from helpers import get_subject_info, read_csv, choose_pair
 from experiment_objects import Image, ImagePair, Trial
-import training, testing, memory, os, csv
+import training, testing, memory, os, csv, name_gen
 
 """
 Main experimental harness
@@ -101,6 +101,7 @@ def main():
 
     if new_experiment:
         setup_files()
+        name_gen.main()
 
     names = get_names(new_experiment)
 
