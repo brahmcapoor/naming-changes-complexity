@@ -41,7 +41,7 @@ def step(window, transparency, img, frames):
     keys = event.waitKeys(maxWait = 2)
 
     img.setAutoDraw(False)
-    if keys:
+    if keys[0] == 'space':
         return -0.02
     else:
         return 0.02
