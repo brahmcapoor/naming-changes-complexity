@@ -1,4 +1,5 @@
-from psychopy import visual, core, event,gui
+from psychopy import visual, core, event, gui
+from psychopy.visual import TextStim
 from random import shuffle, randint
 from helpers import get_subject_info, read_csv, choose_pair
 from experiment_objects import Image, ImagePair, Trial
@@ -74,6 +75,27 @@ def setup_files():
         header = ["Subject Number", "Round number", "Name 1", "Remembered Name 1", "Name 2", "Remembered Name 2", "Foil Name 1", "Foil Name 2"]
         wr.writerow(header)
 
+def end_section(window, experiment_end = False):
+    """
+    After each section, press space to continue
+    """
+
+    if experiment_end:
+        string = "End of experiment. Thank you!"
+    else:
+        string = "End of section"
+    text= TextStim(win = window,
+                    text = string,
+                    pos = (0,0),
+                    alignHoriz = 'center',
+                    alignVert = 'center',
+                    height = 50)
+
+    text.draw()
+    window.flip()
+    event.waitKeys()
+    window.flip()
+
 def main():
     new_experiment, subject_number = startup()
 
@@ -124,8 +146,11 @@ def main():
             trial = Trial(subject_number, round_num, dom_eye,
                           subject_image_pair, pair_num)
 
+    end_section(window)
     testing.main(window, trial)
+    end_section(window)
     memory.main(window, trial, True)
+    end_section(window, True)
     window.close()
 
 
