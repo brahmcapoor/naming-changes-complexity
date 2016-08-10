@@ -3,7 +3,7 @@ from psychopy.visual import TextStim
 from random import shuffle, randint
 from helpers import get_subject_info, read_csv, choose_pair
 from experiment_objects import Image, ImagePair, Trial
-import training, testing, memory, os, csv, name_gen
+import training, testing, memory, os, csv, name_gen, shutil
 
 """
 Main experimental harness
@@ -73,6 +73,17 @@ def setup_files():
     with open("memory_results_after.csv", 'wb') as f:
         wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
         header = ["Subject Number", "Round number", "Name 1", "Remembered Name 1", "Name 2", "Remembered Name 2", "Foil Name 1", "Foil Name 2"]
+        wr.writerow(header)
+
+    if os.path.exists("subject logs"):
+        shutil.rmtree("subject logs")
+
+    os.makedirs("subject logs")
+
+    with open('subject logs/catch trials.csv', 'wb') as f:
+        wr = csv.writer(f, quoting = csv.QUOTE_NONNUMERIC)
+
+        header = ["Subject Number", "Visible seen (should be > 14)", "Invisible seen (should be < 2)"]
         wr.writerow(header)
 
 def end_section(window, experiment_end = False):
