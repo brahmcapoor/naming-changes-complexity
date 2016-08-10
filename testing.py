@@ -5,7 +5,7 @@ from helpers import choose_pair, retrieve_subject_info, get_subject_info
 import os, csv
 
 
-def step(window, transparency, img, frames):
+def step(window, transparencies, img, frames):
     """
     Performs a single 'step' for the staircase method.
 
@@ -15,11 +15,11 @@ def step(window, transparency, img, frames):
 
     pressToContinue(window)
 
-    img.setOpacity(transparency)
     img.setAutoDraw(True)
 
     for frameN in range(60):
-
+        transparency = transparencies[frameN]
+        img.opacity = transparency
         frame_num = frameN//6
         mask_frame = frames[frame_num]
 
@@ -38,10 +38,10 @@ def step(window, transparency, img, frames):
 
     window.flip()
 
-    keys = event.waitKeys(maxWait = 2)
+    keys = event.waitKeys(maxWait = 1)
 
     img.setAutoDraw(False)
-    if keys[0] == 'space':
+    if keys and keys[0] == 'space':
         return -0.02
     else:
         return 0.02
@@ -135,8 +135,11 @@ def staircase(window, image, transparency, dominant_eye):
                           lineWidth = 0,
                           autoDraw = True)
 
+
     for i in range(40):
-        transparency += step(window, transparency, img, frames)
+        transparencies = [0.016 * n for n in range(60)]
+        transparencies = map(lambda n: n * transparency, transparencies)
+        transparency += step(window, transparencies, img, frames)
         if transparency > 1:
             transparency = 1
         if transparency < 0:
@@ -156,7 +159,7 @@ def write_to_csv(trial, individual_results, first_average, second_average):
     data = [trial.subject_number, individual_results, first_average, second_average, [image.name for image in trial.image_pair.images]]
 
     with open('testing_results.csv', 'ab') as f:
-        wr = csv.writer(f, quoting=csv.QUOTE_ALL)
+        wr = csv.writer(f, quoting=csv.QUOTE_NONE)
         wr.writerow(data)
 
 
@@ -171,9 +174,9 @@ def main(window, trial):
     img_1 = images[0]
     img_2 = images[1]
 
-    result_10 = (window, img_1, 0, dominant_eye)
+    result_10 = (window, img_1, 1, dominant_eye) #TODO: change back to 0
     result_11 = (window, img_1, 1, dominant_eye)
-    result_20 = (window, img_2, 0, dominant_eye)
+    result_20 = (window, img_2, 1, dominant_eye) #TODO: change back to 0
     result_21 = (window, img_2, 1, dominant_eye)
 
     results = [result_10, result_11, result_20, result_21]
