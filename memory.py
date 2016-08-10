@@ -61,12 +61,14 @@ def write_to_csv(subject_number, round_number, name_1, remembered_name_1,
         filename = "memory_results_after.csv"
 
     with open(filename, 'ab') as f:
-        wr = csv.writer(f, quoting=csv.QUOTE_NONE)
+        wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
 
         wr.writerow(data)
 
 
-def main(window, trial, final = False):
+def main(trial, final = False):
+
+    window = trial.window
 
     pair_num = trial.pair_num
     round_number = trial.round_number

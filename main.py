@@ -52,26 +52,26 @@ def setup_files():
     Clears the csv results files
     """
     with open("training_results.csv", 'wb') as f:
-        wr = csv.writer(f, quoting=csv.QUOTE_NONE)
+        wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
 
         header = ["Subject Number", "Round Number", "Dominant Eye",
                   "Pair Number", "Name 1", "Name 2"]
         wr.writerow(header)
 
     with open("testing_results.csv", 'wb') as f:
-        wr = csv.writer(f, quoting=csv.QUOTE_NONE)
+        wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
 
         header = ["Subject Number",  "Individual results", "Image 1 Average", "Image 2 Average", "Names"]
 
         wr.writerow(header)
 
     with open("memory_results_before.csv", 'wb') as f:
-        wr = csv.writer(f, quoting=csv.QUOTE_NONE)
+        wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
         header = ["Subject Number", "Round Number", "Name 1", "Remembered Name 1", "Name 2", "Remembered Name 2", "Foil Name 1", "Foil Name 2"]
         wr.writerow(header)
 
     with open("memory_results_after.csv", 'wb') as f:
-        wr = csv.writer(f, quoting=csv.QUOTE_NONE)
+        wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
         header = ["Subject Number", "Round number", "Name 1", "Remembered Name 1", "Name 2", "Remembered Name 2", "Foil Name 1", "Foil Name 2"]
         wr.writerow(header)
 
@@ -130,12 +130,12 @@ def main():
                           fullscr = True)
 
     subject_image_pair = ImagePair(pair_path, name_pair)
-    trial = Trial(subject_number, round_num, dom_eye, subject_image_pair,
+    trial = Trial(window, subject_number, round_num, dom_eye, subject_image_pair,
                   pair_num)
 
     while True:
-        training.main(window, trial)
-        if memory.main(window,trial):
+        training.main(trial)
+        if memory.main(trial):
             break
         else:
             round_num = trial.round_number + 1
@@ -144,14 +144,14 @@ def main():
             name_pair = names[randint(0,7)].split(" ")
 
             subject_image_pair = ImagePair(pair_path, name_pair)
-            trial = Trial(subject_number, round_num, dom_eye,
+            trial = Trial(window,subject_number, round_num, dom_eye,
                           subject_image_pair, pair_num)
 
-    end_section(window)
-    testing.main(window, trial)
-    end_section(window)
-    memory.main(window, trial, True)
-    end_section(window, True)
+    end_section(trial.window)
+    testing.main(trial)
+    end_section(trial.window)
+    memory.main(trial, True)
+    end_section(trial.window, True)
     window.close()
 
 

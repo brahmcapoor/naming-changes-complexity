@@ -1,5 +1,6 @@
 from psychopy import visual, core, event
 from psychopy.visual import Rect, Circle, ImageStim, TextStim
+from psychopy.core import Clock
 from random import sample
 from helpers import choose_pair, retrieve_subject_info, get_subject_info
 import os, csv
@@ -38,13 +39,14 @@ def step(window, transparencies, img, frames):
 
     window.flip()
 
-    keys = event.waitKeys(maxWait = 1)
+    clock = Clock()
+    keys = event.waitKeys(maxWait = 1, timeStamped = clock)
 
     img.setAutoDraw(False)
-    if keys and keys[0] == 'space':
-        return -0.02
+    if keys and keys[0][0] == 'space':
+        return [-0.02, keys[0][1], transparency]
     else:
-        return 0.02
+        return [0.02, "NO RESPONSE", transparency]
 
 def pressToContinue(window):
     """
@@ -136,10 +138,17 @@ def staircase(window, image, transparency, dominant_eye):
                           autoDraw = True)
 
 
+    response_times = []
+    transparency_log = []
+
     for i in range(40):
-        transparencies = [0.016 * n for n in range(60)]
+        transparencies = [0.016 * (n + 1) for n in range(60)]
         transparencies = map(lambda n: n * transparency, transparencies)
-        transparency += step(window, transparencies, img, frames)
+        result = step(window, transparencies, img, frames)
+        transparency += result[0]
+        response_times.append(result[1])
+        transparency_log.append(result[2])
+
         if transparency > 1:
             transparency = 1
         if transparency < 0:
@@ -152,19 +161,37 @@ def staircase(window, image, transparency, dominant_eye):
 
     window.flip()
 
-    return transparency
+    return [transparency, response_times, transparency_log]
 
 def write_to_csv(trial, individual_results, first_average, second_average):
 
     data = [trial.subject_number, individual_results, first_average, second_average, [image.name for image in trial.image_pair.images]]
 
     with open('testing_results.csv', 'ab') as f:
-        wr = csv.writer(f, quoting=csv.QUOTE_NONE)
+        wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
         wr.writerow(data)
 
+def create_subject_log(subject_number, response_times, transparency_logs):
 
-def main(window, trial):
+    filename = "subject logs/subject {}.csv".format(subject_number)
 
+    with open(filename, 'wb') as f:
+        wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
+
+        header = ["Trial number, ""Transparency", "Response time", "Transparency", "Response time", "Transparency", "Response time", "Transparency", "Response time"]
+        wr.writerow(header)
+
+        for i in range(len(response_times[1])):
+            row = [i, transparency_logs[0][i], response_times[0][i],
+                   transparency_logs[1][i], response_times[1][i],
+                   transparency_logs[2][i], response_times[2][i],
+                   transparency_logs[3][i], response_times[3][i]]
+            wr.writerow(row)
+
+
+def main(trial):
+
+    window = trial.window
 
     dominant_eye = trial.dominant_eye
     pair_num = trial.pair_num
@@ -174,9 +201,9 @@ def main(window, trial):
     img_1 = images[0]
     img_2 = images[1]
 
-    result_10 = (window, img_1, 1, dominant_eye) #TODO: change back to 0
+    result_10 = (window, img_1, 0, dominant_eye)
     result_11 = (window, img_1, 1, dominant_eye)
-    result_20 = (window, img_2, 1, dominant_eye) #TODO: change back to 0
+    result_20 = (window, img_2, 0, dominant_eye)
     result_21 = (window, img_2, 1, dominant_eye)
 
     results = [result_10, result_11, result_20, result_21]
@@ -184,7 +211,12 @@ def main(window, trial):
     for index in sample([0,1,2,3], 4):
         results[index] = staircase(*results[index])
 
-    result_10, result_11, result_20, result_21 = tuple(results)
+    result_10, result_11, result_20, result_21 = tuple(result[0] for result in results)
+
+    response_times = [result[1] for result in results]
+    transparency_logs = [result[2] for result in results]
+
+    create_subject_log(trial.subject_number, response_times, transparency_logs)
 
     img_1_avg = (result_10 + result_11)/2
     img_2_avg = (result_20 + result_21)/2

@@ -50,9 +50,10 @@ class ImagePair():
 
 class Trial():
 
-    def __init__(self, subject_number, round_number, dominant_eye, image_pair,
-                 pair_num):
+    def __init__(self, window, subject_number, round_number, dominant_eye,
+                 image_pair,pair_num):
 
+        self.window = window
         self.subject_number = subject_number
         self.round_number = round_number
         self.dominant_eye = dominant_eye
