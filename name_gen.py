@@ -14,7 +14,7 @@ def generate_random_word(complex = True):
     """
 
     if complex:
-        letters = 4
+        letters = 3
 
     else:
         letters = 1

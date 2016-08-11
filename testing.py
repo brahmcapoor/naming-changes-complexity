@@ -19,6 +19,9 @@ def step(window, transparencies, img, frames):
 
     img.setAutoDraw(True)
 
+    clock = Clock()
+    keys = event.waitKeys(maxWait = 2, timeStamped = clock)
+
     for frameN in range(60):
         transparency = transparencies[frameN]
         img.opacity = transparency
@@ -26,6 +29,10 @@ def step(window, transparencies, img, frames):
         mask_frame = frames[frame_num]
 
         mask_frame.draw()
+
+        if keys and keys[0][0] == 'space':
+            break
+            
         window.flip()
 
     img.setAutoDraw(False)
@@ -39,9 +46,6 @@ def step(window, transparencies, img, frames):
         window.flip()
 
     window.flip()
-
-    clock = Clock()
-    keys = event.waitKeys(maxWait = 1, timeStamped = clock)
 
     img.setAutoDraw(False)
     if keys and keys[0][0] == 'space':
