@@ -20,8 +20,9 @@ def step(window, transparencies, img, frames):
     img.setAutoDraw(True)
 
     clock = Clock()
-    keys = event.waitKeys(maxWait = 2, timeStamped = clock)
+    keys = event.getKeys(timeStamped = clock)
 
+    seen = False
     for frameN in range(60):
         transparency = transparencies[frameN]
         img.opacity = transparency
@@ -30,9 +31,11 @@ def step(window, transparencies, img, frames):
 
         mask_frame.draw()
 
+        keys = event.getKeys(timeStamped = clock)
         if keys and keys[0][0] == 'space':
+            seen = True
             break
-            
+
         window.flip()
 
     img.setAutoDraw(False)
@@ -43,12 +46,23 @@ def step(window, transparencies, img, frames):
         mask_frame = frames[frame_num]
 
         mask_frame.draw()
+
+        if not seen:
+            keys = event.getKeys(timeStamped = clock)
+            if keys and keys[0][0] == 'space':
+                seen = True
+
         window.flip()
 
-    window.flip()
+    for frameN in range(54):
+        if not seen:
+            keys = event.getKeys(timeStamped = clock)
+            if keys and keys[0][0] == 'space':
+                seen = True
+                break
+        window.flip()
 
-    img.setAutoDraw(False)
-    if keys and keys[0][0] == 'space':
+    if seen:
         return [-0.02, keys[0][1], transparency]
     else:
         return [0.02, "NO RESPONSE", transparency]
@@ -60,13 +74,13 @@ def pressToContinue(window):
 
     text_1 = TextStim(win = window,
                       text = "Press space to \ncontinue",
-                      pos= (200, 150),
+                      pos= (200, 250),
                       alignHoriz = 'center',
                       alignVert = 'center')
 
     text_2 = TextStim(win = window,
                       text = "Press space to \ncontinue",
-                      pos = (-200,150),
+                      pos = (-200,250),
                       alignHoriz = 'center',
                       alignVert = 'center')
 
@@ -87,11 +101,11 @@ def catch_trial(window, image, frames, catch_frames, visible):
         transparency = 0
 
     img_1 = image.stimulus(window,
-                           position = (200, 150),
+                           position = (200, 250),
                            transparency = 0)
 
     img_2 = image.stimulus(window,
-                           position = (-200, 150),
+                           position = (-200, 250),
                            transparency = 0)
 
 
@@ -150,7 +164,7 @@ def staircase(window, image, transparency, dominant_eye):
     # Image stuff
 
     img = image.stimulus(window,
-                         position = (-1 * maskPos, 150),
+                         position = (-1 * maskPos, 250),
                          transparency = transparency)
 
     # Fusion box stuff
@@ -160,7 +174,7 @@ def staircase(window, image, transparency, dominant_eye):
                  height = 180,
                  lineWidth = 4,
                  lineColor = 'grey',
-                 pos = (maskPos, 150),
+                 pos = (maskPos, 250),
                  autoDraw = True)
 
     box_2 = Rect(win = window,
@@ -168,7 +182,7 @@ def staircase(window, image, transparency, dominant_eye):
                  height = 180,
                  lineWidth = 4,
                  lineColor = 'grey',
-                 pos = (-1 * maskPos, 150),
+                 pos = (-1 * maskPos, 250),
                  autoDraw = True)
 
     box_1.setAutoDraw(True)
@@ -181,29 +195,29 @@ def staircase(window, image, transparency, dominant_eye):
                                             image = file_name,
                                             color = (1,1,1),
                                             size = [150, 150],
-                                            pos = (maskPos,150),
-                                            opacity = 0.2), frame_paths)
+                                            pos = (maskPos,250),
+                                            opacity = 1), frame_paths)
 
     catch_frames = map(lambda file_name: ImageStim(window,
                                             image = file_name,
                                             color = (1,1,1),
                                             size = [150, 150],
-                                            pos = (-1 * maskPos,150),
-                                            opacity = 0.2), frame_paths)
+                                            pos = (-1 * maskPos,250),
+                                            opacity = 1), frame_paths)
 
     #Fixation dot stuff
 
     fixation_dot_1 = Circle(win = window,
                           radius = 2,
                           fillColor = 'red',
-                          pos = (maskPos, 150),
+                          pos = (maskPos, 250),
                           lineWidth = 0,
                           autoDraw = True)
 
     fixation_dot_2 = Circle(win = window,
                           radius = 2,
                           fillColor = 'red',
-                          pos = (-1 * maskPos, 150),
+                          pos = (-1 * maskPos, 250),
                           lineWidth = 0,
                           autoDraw = True)
 
@@ -212,8 +226,8 @@ def staircase(window, image, transparency, dominant_eye):
     transparency_log = []
 
     #catch trials
-    N_TRIALS = 48
-    N_CATCH_TRIALS = 8
+    N_TRIALS = 4
+    N_CATCH_TRIALS = 2
 
     catch_trials = sample(range(N_TRIALS), N_CATCH_TRIALS)
     invisible_trials = catch_trials[:N_CATCH_TRIALS/2]
@@ -298,10 +312,10 @@ def main(trial):
     img_1 = images[0]
     img_2 = images[1]
 
-    result_10 = (window, img_1, 0, dominant_eye)
-    result_11 = (window, img_1, 1, dominant_eye)
-    result_20 = (window, img_2, 0, dominant_eye)
-    result_21 = (window, img_2, 1, dominant_eye)
+    result_10 = (window, img_1, 0.1, dominant_eye)
+    result_11 = (window, img_1, 0.5, dominant_eye)
+    result_20 = (window, img_2, 0.1, dominant_eye)
+    result_21 = (window, img_2, 0.5, dominant_eye)
 
     results = [result_10, result_11, result_20, result_21]
 
