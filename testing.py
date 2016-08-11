@@ -108,7 +108,11 @@ def catch_trial(window, image, frames, catch_frames, visible):
                            position = (-200, 250),
                            transparency = 0)
 
+    clock = Clock()
 
+    keys = event.getKeys()
+
+    skip_to_end = False
 
     for frameN in range(64):
         opacity = 0.015625 * frameN*transparency
@@ -127,6 +131,10 @@ def catch_trial(window, image, frames, catch_frames, visible):
         img_1.draw()
         img_2.draw()
 
+        if event.getKeys():
+            skip_to_end = True
+            break
+
         window.flip()
 
     for frameN in range(6):
@@ -136,9 +144,18 @@ def catch_trial(window, image, frames, catch_frames, visible):
         mask_frame_1.draw()
         mask_frame_2.draw()
 
+        if not skip_to_end:
+            if event.getKeys():
+                skip_to_end = True
+
         window.flip()
 
-    window.flip()
+    for frameN in range(54):
+        if not skip_to_end:
+            if event.getKeys():
+                break
+
+        window.flip()
 
     clock = Clock()
 
