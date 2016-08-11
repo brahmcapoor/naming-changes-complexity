@@ -8,7 +8,7 @@ Generates 16 random pairs of names, one simple and one complex
 VOWELS = ['a', 'e', 'i', 'o', 'u']
 CONSONANTS = ['s', 'z', 'f', 'v', 'k', 'g', 'p', 'b', 't', 'd']
 
-def generate_random_word(complex = True):
+def generate_random_word(complex = False):
     """
     Generates one random word
     """
@@ -34,8 +34,11 @@ def generate_pair_name():
     Generates a string of names for a pair
     """
 
-    simple = generate_random_word(False)
-    hard = generate_random_word(True)
+    simple = generate_random_word()
+    while True:
+        hard = generate_random_word(True)
+        if simple not in hard:
+            break
     return simple + " " + hard
 
 
