@@ -243,8 +243,8 @@ def staircase(window, image, transparency, dominant_eye):
     transparency_log = []
 
     #catch trials
-    N_TRIALS = 4
-    N_CATCH_TRIALS = 2
+    N_TRIALS = 48
+    N_CATCH_TRIALS = 8
 
     catch_trials = sample(range(N_TRIALS), N_CATCH_TRIALS)
     invisible_trials = catch_trials[:N_CATCH_TRIALS/2]
