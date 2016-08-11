@@ -139,7 +139,7 @@ def staircase(window, image, transparency, dominant_eye):
     returns the threshold
     """
 
-    if dominant_eye == "True":
+    if dominant_eye:
         maskPos = 200
     else:
         maskPos = -200

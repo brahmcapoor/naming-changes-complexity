@@ -48,7 +48,7 @@ def write_to_file(subject_number, round_num, dom_eye, pair_num, name_1, name_2):
     """
     subject_data = [subject_number, round_num, dom_eye, pair_num, name_1, name_2]
 
-    with open('training_results.csv', 'wb') as f:
+    with open('training_results.csv', 'ab') as f:
         wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
         wr.writerow(subject_data)
 

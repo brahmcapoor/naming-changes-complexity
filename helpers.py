@@ -21,10 +21,7 @@ def get_subject_info(training = False, subject_number = 1):
     input.addField("Right eye dominant", True)
     input.show()
 
-    if training:
-        return tuple(input.data)
-    else:
-        return int(input.data[0])
+    return tuple(input.data)
 
 
 def choose_pair(i):

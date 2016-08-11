@@ -116,8 +116,7 @@ def main():
 
     names = get_names(new_experiment)
 
-    round_num, dom_eye = get_subject_info(training = True,
-                                          subject_number = subject_number)
+    round_num, dom_eye = get_subject_info(subject_number = subject_number)
 
 
     pair_num = None
