@@ -23,7 +23,7 @@ def show_pair_with_names(window, images):
         image = stimuli[i]
         label = labels[i]
 
-        for frameN in range(300):
+        for frameN in range(600):
             image.draw()
             label.draw()
             window.flip()
@@ -36,7 +36,7 @@ def show_both_images(window, images):
     img_1 = images[0].stimulus(window, (-200,0), 200)
     img_2 = images[1].stimulus(window, (200,0), 200)
 
-    for frameN in range(600):
+    for frameN in range(1200):
         img_1.draw()
         img_2.draw()
         window.flip()

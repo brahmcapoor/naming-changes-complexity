@@ -24,8 +24,8 @@ def step(window, transparencies, img, frames):
 
     seen = False
     for frameN in range(60):
-        transparency = transparencies[frameN]
-        img.opacity = transparency
+        opacity = transparencies[frameN]
+        img.opacity = opacity
         frame_num = frameN//6
         mask_frame = frames[frame_num]
 
@@ -54,18 +54,18 @@ def step(window, transparencies, img, frames):
 
         window.flip()
 
-    for frameN in range(54):
-        if not seen:
-            keys = event.getKeys(timeStamped = clock)
-            if keys and keys[0][0] == 'space':
+    if not seen:
+        for frameN in range(54) :
+            keys = event.getKeys(['space'])
+            if keys:
                 seen = True
                 break
-        window.flip()
+            window.flip()
 
     if seen:
-        return [-0.02, keys[0][1], transparency]
+        return [-0.02, keys[0][1]]
     else:
-        return [0.02, "NO RESPONSE", transparency]
+        return [0.02, "NO RESPONSE"]
 
 def pressToContinue(window):
     """
@@ -110,7 +110,7 @@ def catch_trial(window, image, frames, catch_frames, visible):
 
     clock = Clock()
 
-    keys = event.getKeys()
+    keys = event.getKeys('space')
 
     skip_to_end = False
 
@@ -131,37 +131,36 @@ def catch_trial(window, image, frames, catch_frames, visible):
         img_1.draw()
         img_2.draw()
 
-        if event.getKeys():
+        keys = event.getKeys(['space'])
+        if keys:
             skip_to_end = True
             break
 
         window.flip()
 
     for frameN in range(6):
+        if skip_to_end:
+            break
+        frame_num =  frameN//10
         mask_frame_1 = frames[frame_num]
         mask_frame_2 = catch_frames[frame_num]
 
         mask_frame_1.draw()
         mask_frame_2.draw()
 
-        if not skip_to_end:
-            if event.getKeys():
-                skip_to_end = True
-
+        keys = event.getKeys(['space'])
+        if keys:
+            skip_to_end = True
         window.flip()
 
-    for frameN in range(54):
-        if not skip_to_end:
-            if event.getKeys():
+    if not skip_to_end:
+        for frameN in range(54) :
+            keys = event.getKeys(['space'])
+            if keys:
                 break
+            window.flip()
 
-        window.flip()
-
-    clock = Clock()
-
-    keys = event.waitKeys(maxWait = 1, timeStamped = clock)
-
-    if keys and keys[0][0] =='space':
+    if keys:
         return 1
     else:
         return 0
@@ -264,9 +263,10 @@ def staircase(window, image, transparency, dominant_eye):
             transparencies = [0.016 * (n + 1) for n in range(60)]
             transparencies = map(lambda n: n * transparency, transparencies)
             result = step(window, transparencies, img, frames)
+            transparency_log.append(transparency)
             transparency += result[0]
             response_times.append(result[1])
-            transparency_log.append(result[2])
+
 
         if transparency > 1:
             transparency = 1
