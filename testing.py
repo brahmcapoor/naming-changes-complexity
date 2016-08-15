@@ -7,7 +7,7 @@ from copy import deepcopy
 import os, csv
 
 
-def step(window, transparencies, img, frames):
+def step(window, transparencies, img, frames, i):
     """
     Performs a single 'step' for the staircase method.
 
@@ -15,6 +15,9 @@ def step(window, transparencies, img, frames):
     key, meaning the stimulus must be more transparent in the next presentation
     """
 
+    increment = 0.02
+    if i > 20:
+        increment = 0.01
     pressToContinue(window)
 
     img.setAutoDraw(True)
@@ -31,8 +34,8 @@ def step(window, transparencies, img, frames):
 
         mask_frame.draw()
 
-        keys = event.getKeys(timeStamped = clock)
-        if keys and keys[0][0] == 'space':
+        keys = event.getKeys(['space'], timeStamped = clock)
+        if keys:
             seen = True
             break
 
@@ -48,24 +51,28 @@ def step(window, transparencies, img, frames):
         mask_frame.draw()
 
         if not seen:
-            keys = event.getKeys(timeStamped = clock)
-            if keys and keys[0][0] == 'space':
+            keys = event.getKeys(['space'], timeStamped = clock)
+            if keys:
                 seen = True
 
         window.flip()
 
     if not seen:
         for frameN in range(54) :
-            keys = event.getKeys(['space'])
+            keys = event.getKeys(['space'], timeStamped = clock)
             if keys:
                 seen = True
                 break
             window.flip()
 
     if seen:
-        return [-0.02, keys[0][1]]
+        if keys[0][1] < 0.2:
+            #they probably pressed the space bar by mistake
+            return [0, "DISCOUNTED TRIAL"]
+        else:
+            return [-1*increment, keys[0][1]]
     else:
-        return [0.02, "NO RESPONSE"]
+        return [increment, "NO RESPONSE"]
 
 def pressToContinue(window):
     """
@@ -138,6 +145,8 @@ def catch_trial(window, image, frames, catch_frames, visible):
 
         window.flip()
 
+    window.flip()
+
     for frameN in range(6):
         if skip_to_end:
             break
@@ -151,6 +160,7 @@ def catch_trial(window, image, frames, catch_frames, visible):
         keys = event.getKeys(['space'])
         if keys:
             skip_to_end = True
+
         window.flip()
 
     if not skip_to_end:
@@ -159,6 +169,8 @@ def catch_trial(window, image, frames, catch_frames, visible):
             if keys:
                 break
             window.flip()
+
+    window.flip()
 
     if keys:
         return 1
@@ -252,20 +264,26 @@ def staircase(window, image, transparency, dominant_eye):
     visible_seen = 0
     invisible_seen = 0
 
-    for i in range(N_TRIALS):
+    i = 0
+    while i < N_TRIALS:
 
         if i in invisible_trials:
             invisible_seen += catch_trial(window, image, frames, catch_frames,
                                           False)
+            i += 1
         elif i in visible_trials:
-            visible_seen += catch_trial(window, image, frames, catch_frames, True)
+            visible_seen += catch_trial(window, image, frames, catch_frames,
+                                        True)
+            i += 1
         else:
             transparencies = [0.016 * (n + 1) for n in range(60)]
             transparencies = map(lambda n: n * transparency, transparencies)
-            result = step(window, transparencies, img, frames)
-            transparency_log.append(transparency)
-            transparency += result[0]
-            response_times.append(result[1])
+            result = step(window, transparencies, img, frames, i)
+            if result[1] != 'DISCOUNTED TRIAL':
+                transparency_log.append(transparency)
+                transparency += result[0]
+                response_times.append(result[1])
+                i += 1
 
 
         if transparency > 1:
