@@ -270,14 +270,14 @@ def staircase(window, images, dominant_eye):
     all_trials = [i for i in range(N_TRIALS)]
     shuffle(all_trials)
 
-    easy_low_contrast = all_trials[:N_TRIALS/6]
-    easy_high_contrast = all_trials[N_TRIALS/6:N_TRIALS/3]
+    easy_low_contrast = all_trials[:40]
+    easy_high_contrast = all_trials[40:80]
 
-    hard_low_contrast = all_trials[N_TRIALS/3:N_TRIALS/2]
-    hard_high_contrast = all_trials[N_TRIALS/2:(2*N_TRIALS)/3]
+    hard_low_contrast = all_trials[80:120]
+    hard_high_contrast = all_trials[120:160]
 
-    invisible_trials = all_trials[(2*N_TRIALS)/3:(5*N_TRIALS)/6]
-    visible_trials = all_trials[(5*N_TRIALS)/6:]
+    invisible_trials = all_trials[160:176]
+    visible_trials = all_trials[176:]
 
     easy_low_contrast_current = 0.1
     easy_high_contrast_current = 0.5
