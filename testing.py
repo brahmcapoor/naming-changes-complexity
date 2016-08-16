@@ -1,7 +1,7 @@
 from psychopy import visual, core, event
 from psychopy.visual import Rect, Circle, ImageStim, TextStim
 from psychopy.core import Clock
-from random import sample
+from random import sample, choice, shuffle
 from helpers import choose_pair, retrieve_subject_info, get_subject_info
 from copy import deepcopy
 import os, csv
@@ -177,7 +177,7 @@ def catch_trial(window, image, frames, catch_frames, visible):
     else:
         return 0
 
-def staircase(window, image, transparency, dominant_eye):
+def staircase(window, images, dominant_eye):
     """
     Performs a single staircase to find the threshold of visibility for a
     subject
@@ -191,9 +191,21 @@ def staircase(window, image, transparency, dominant_eye):
         maskPos = -200
     # Image stuff
 
-    img = image.stimulus(window,
-                         position = (-1 * maskPos, 250),
-                         transparency = transparency)
+    img_1_low_contrast = images[0].stimulus(window,
+                                            position = (-1 * maskPos, 250),
+                                            transparency = 0.1)
+
+    img_1_high_contrast = images[0].stimulus(window,
+                                            position = (-1 * maskPos, 250),
+                                            transparency = 0.5)
+
+    img_2_low_contrast = images[1].stimulus(window,
+                                position = (-1 * maskPos, 250),
+                                transparency = 0.1)
+
+    img_2_high_contrast = images[1].stimulus(window,
+                                position = (-1 * maskPos, 250),
+                                transparency = 0.5)
 
     # Fusion box stuff
 
@@ -254,42 +266,110 @@ def staircase(window, image, transparency, dominant_eye):
     transparency_log = []
 
     #catch trials
-    N_TRIALS = 48
-    N_CATCH_TRIALS = 8
+    N_TRIALS = 192
+    all_trials = [i for i in range(N_TRIALS)]
+    shuffle(all_trials)
 
-    catch_trials = sample(range(N_TRIALS), N_CATCH_TRIALS)
-    invisible_trials = catch_trials[:N_CATCH_TRIALS/2]
-    visible_trials = catch_trials[N_CATCH_TRIALS/2:]
+    easy_low_contrast = all_trials[:N_TRIALS/6]
+    easy_high_contrast = all_trials[N_TRIALS/6:N_TRIALS/3]
+
+    hard_low_contrast = all_trials[N_TRIALS/3:N_TRIALS/2]
+    hard_high_contrast = all_trials[N_TRIALS/2:(2*N_TRIALS)/3]
+
+    invisible_trials = all_trials[(2*N_TRIALS)/3:(5*N_TRIALS)/6]
+    visible_trials = all_trials[(5*N_TRIALS)/6:]
+
+    easy_low_contrast_current = 0.1
+    easy_high_contrast_current = 0.5
+
+    hard_low_contrast_current = 0.1
+    hard_high_contrast_current = 0.5
 
     visible_seen = 0
     invisible_seen = 0
+
+    transparency_log_1 = []
+    transparency_log_2 = []
+    transparency_log_3 = []
+    transparency_log_4 = []
+
+    response_times_1 = []
+    response_times_2 = []
+    response_times_3 = []
+    response_times_4 = []
 
     i = 0
     while i < N_TRIALS:
 
         if i in invisible_trials:
-            invisible_seen += catch_trial(window, image, frames, catch_frames,
+            invisible_seen += catch_trial(window, choice(images), frames, catch_frames,
                                           False)
             i += 1
         elif i in visible_trials:
-            visible_seen += catch_trial(window, image, frames, catch_frames,
+            visible_seen += catch_trial(window, choice(images), frames, catch_frames,
                                         True)
             i += 1
-        else:
+
+        elif i in easy_low_contrast:
             transparencies = [0.016 * (n + 1) for n in range(60)]
-            transparencies = map(lambda n: n * transparency, transparencies)
-            result = step(window, transparencies, img, frames, i)
+            transparencies = map(lambda n: n * easy_low_contrast_current, transparencies)
+            result = step(window, transparencies, img_1_low_contrast, frames, i)
             if result[1] != 'DISCOUNTED TRIAL':
-                transparency_log.append(transparency)
-                transparency += result[0]
-                response_times.append(result[1])
+                transparency_log_1.append(easy_low_contrast_current)
+                easy_low_contrast_current += result[0]
+                response_times_1.append(result[1])
+                i += 1
+        elif i in easy_high_contrast:
+            transparencies = [0.016 * (n + 1) for n in range(60)]
+            transparencies = map(lambda n: n * easy_high_contrast_current, transparencies)
+            result = step(window, transparencies, img_1_high_contrast, frames, i)
+            if result[1] != 'DISCOUNTED TRIAL':
+                transparency_log_2.append(easy_high_contrast_current)
+                easy_high_contrast_current += result[0]
+                response_times_2.append(result[1])
+                i += 1
+        elif i in hard_low_contrast:
+            transparencies = [0.016 * (n + 1) for n in range(60)]
+            transparencies = map(lambda n: n * hard_low_contrast_current, transparencies)
+            result = step(window, transparencies, img_2_low_contrast, frames, i)
+            if result[1] != 'DISCOUNTED TRIAL':
+                transparency_log_3.append(hard_low_contrast_current)
+                hard_low_contrast_current += result[0]
+                response_times_3.append(result[1])
+                i += 1
+        elif i in hard_high_contrast:
+            transparencies = [0.016 * (n + 1) for n in range(60)]
+            transparencies = map(lambda n: n * hard_high_contrast_current, transparencies)
+            result = step(window, transparencies, img_2_high_contrast, frames, i)
+            if result[1] != 'DISCOUNTED TRIAL':
+                transparency_log_4.append(hard_high_contrast_current)
+                hard_high_contrast_current += result[0]
+                response_times_4.append(result[1])
                 i += 1
 
 
-        if transparency > 1:
-            transparency = 1
-        if transparency < 0:
-            transparency = 0
+        if easy_low_contrast_current > 1:
+            easy_low_contrast_current = 1
+        if easy_low_contrast_current < 0:
+            easy_low_contrast_current = 0
+        if easy_high_contrast_current > 1:
+            easy_high_contrast_current = 1
+        if easy_high_contrast_current < 0:
+            easy_low_contrast_current = 0
+        if hard_low_contrast_current > 1:
+            hard_low_contrast_current = 1
+        if hard_low_contrast_current < 0:
+            easy_low_contrast_current = 0
+        if hard_high_contrast_current > 1:
+            hard_high_contrast_current = 1
+        if hard_high_contrast_current < 0:
+            hard_high_contrast_current = 0
+
+        img_1_low_contrast.setOpacity(easy_low_contrast_current)
+        img_1_high_contrast.setOpacity(easy_high_contrast_current)
+        img_2_low_contrast.setOpacity(hard_low_contrast_current)
+        img_2_high_contrast.setOpacity(hard_high_contrast_current)
+
 
     box_1.setAutoDraw(False)
     box_2.setAutoDraw (False)
@@ -298,7 +378,22 @@ def staircase(window, image, transparency, dominant_eye):
 
     window.flip()
 
-    return [transparency, response_times, transparency_log, visible_seen,
+    transparencies = [easy_low_contrast_current,
+                      easy_high_contrast_current,
+                      hard_low_contrast_current,
+                      hard_high_contrast_current]
+
+    transparency_logs = [transparency_log_1,
+                         transparency_log_2,
+                         transparency_log_3,
+                         transparency_log_4]
+
+    response_time_logs = [response_times_1,
+                          response_times_2,
+                          response_times_3,
+                          response_times_4]
+
+    return [transparencies, response_time_logs, transparency_logs, visible_seen,
             invisible_seen]
 
 def write_to_csv(trial, individual_results, first_average, second_average):
@@ -334,7 +429,6 @@ def create_subject_log(subject_number, response_times, transparency_logs,
 
         wr.writerow(data)
 
-
 def main(trial):
 
     window = trial.window
@@ -344,25 +438,16 @@ def main(trial):
 
     images = trial.image_pair.images
 
-    img_1 = images[0]
-    img_2 = images[1]
+    results = staircase(window, images, dominant_eye)
 
-    result_10 = (window, img_1, 0.1, dominant_eye)
-    result_11 = (window, img_1, 0.5, dominant_eye)
-    result_20 = (window, img_2, 0.1, dominant_eye)
-    result_21 = (window, img_2, 0.5, dominant_eye)
+    result_10, result_11, result_20, result_21 = tuple(results[0])
 
-    results = [result_10, result_11, result_20, result_21]
+    response_times = results[1]
 
-    for index in sample([0,1,2,3], 4):
-        results[index] = staircase(*results[index])
+    transparency_logs = results[2]
 
-    result_10, result_11, result_20, result_21 = tuple(result[0] for result in results)
-
-    response_times = [result[1] for result in results]
-    transparency_logs = [result[2] for result in results]
-    visible_seen = sum(result[3] for result in results)
-    invisible_seen = sum(result[4] for result in results)
+    visible_seen = results[3]
+    invisible_seen = results[4]
 
     create_subject_log(trial.subject_number, response_times, transparency_logs,
                        visible_seen, invisible_seen)
@@ -373,6 +458,7 @@ def main(trial):
     individual_results = [result_10, result_11, result_20, result_21]
 
     write_to_csv(trial, individual_results, img_1_avg, img_2_avg)
+
 
 if __name__ == "__main__":
     main()
