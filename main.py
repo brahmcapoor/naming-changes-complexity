@@ -83,7 +83,7 @@ def setup_files():
     with open('subject logs/catch trials.csv', 'wb') as f:
         wr = csv.writer(f, quoting = csv.QUOTE_NONNUMERIC)
 
-        header = ["Subject Number", "Visible seen (should be > 14)", "Invisible seen (should be < 2)"]
+        header = ["Subject Number", "Visible seen (should be > 14)", "Invisible seen (should be < 2)", "Invalid Trials"]
         wr.writerow(header)
 
 def end_section(window, experiment_end = False):
