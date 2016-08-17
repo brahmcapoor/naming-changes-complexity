@@ -15,6 +15,18 @@ def step(window, transparencies, img, frames, i):
     key, meaning the stimulus must be more transparent in the next presentation
     """
 
+    text_1 = TextStim(win = window,
+                      text = "Press space if \nyou saw something",
+                      pos= (200, 150),
+                      alignHoriz = 'center',
+                      alignVert = 'center')
+
+    text_2 = TextStim(win = window,
+                      text = "Press space if \nyou saw something",
+                      pos = (-200,150),
+                      alignHoriz = 'center',
+                      alignVert = 'center')
+
     increment = 0.02
     if i > 19:
         increment = 0.01
@@ -59,11 +71,15 @@ def step(window, transparencies, img, frames, i):
 
     if not seen:
         for frameN in range(54) :
+            text_1.draw()
+            text_2.draw()
             keys = event.getKeys(['space'], timeStamped = clock)
             if keys:
                 seen = True
                 break
             window.flip()
+
+    window.flip()
 
     if seen:
         if keys[0][1] < 0.2:
@@ -81,13 +97,13 @@ def pressToContinue(window):
 
     text_1 = TextStim(win = window,
                       text = "Press space to \ncontinue",
-                      pos= (200, 250),
+                      pos= (200, 150),
                       alignHoriz = 'center',
                       alignVert = 'center')
 
     text_2 = TextStim(win = window,
                       text = "Press space to \ncontinue",
-                      pos = (-200,250),
+                      pos = (-200,150),
                       alignHoriz = 'center',
                       alignVert = 'center')
 
@@ -98,7 +114,25 @@ def pressToContinue(window):
     event.waitKeys()
     window.flip()
 
-def catch_trial(window, image, frames, catch_frames, visible):
+def catch_trial(window, image, frames, visible, dominant_eye):
+
+    text_1 = TextStim(win = window,
+                      text = "Press space if \nyou saw something",
+                      pos= (200, 150),
+                      alignHoriz = 'center',
+                      alignVert = 'center')
+
+    text_2 = TextStim(win = window,
+                      text = "Press space if \nyou saw something",
+                      pos = (-200,150),
+                      alignHoriz = 'center',
+                      alignVert = 'center')
+
+
+    if dominant_eye:
+        img_pos = 200
+    else:
+        img_pos = -200
 
     pressToContinue(window)
     transparency = None
@@ -108,12 +142,9 @@ def catch_trial(window, image, frames, catch_frames, visible):
         transparency = 0
 
     img_1 = image.stimulus(window,
-                           position = (200, 250),
+                           position = (img_pos, 150),
                            transparency = 0)
 
-    img_2 = image.stimulus(window,
-                           position = (-200, 250),
-                           transparency = 0)
 
     clock = Clock()
 
@@ -125,18 +156,16 @@ def catch_trial(window, image, frames, catch_frames, visible):
         opacity = 0.015625 * frameN*transparency
 
         img_1.setOpacity(opacity)
-        img_2.setOpacity(opacity)
 
         frame_num = (frameN//6)%10
 
         mask_frame_1 = frames[frame_num]
-        mask_frame_2 = catch_frames[frame_num]
 
         mask_frame_1.draw()
-        mask_frame_2.draw()
+
 
         img_1.draw()
-        img_2.draw()
+
 
         keys = event.getKeys(['space'])
         if keys:
@@ -152,10 +181,8 @@ def catch_trial(window, image, frames, catch_frames, visible):
             break
         frame_num =  frameN//10
         mask_frame_1 = frames[frame_num]
-        mask_frame_2 = catch_frames[frame_num]
 
         mask_frame_1.draw()
-        mask_frame_2.draw()
 
         keys = event.getKeys(['space'])
         if keys:
@@ -165,6 +192,8 @@ def catch_trial(window, image, frames, catch_frames, visible):
 
     if not skip_to_end:
         for frameN in range(54) :
+            text_1.draw()
+            text_2.draw()
             keys = event.getKeys(['space'])
             if keys:
                 break
@@ -192,19 +221,19 @@ def staircase(window, images, dominant_eye):
     # Image stuff
 
     img_1_low_contrast = images[0].stimulus(window,
-                                            position = (-1 * maskPos, 250),
+                                            position = (-1 * maskPos, 150),
                                             transparency = 0.1)
 
     img_1_high_contrast = images[0].stimulus(window,
-                                            position = (-1 * maskPos, 250),
+                                            position = (-1 * maskPos, 150),
                                             transparency = 0.5)
 
     img_2_low_contrast = images[1].stimulus(window,
-                                position = (-1 * maskPos, 250),
+                                position = (-1 * maskPos, 150),
                                 transparency = 0.1)
 
     img_2_high_contrast = images[1].stimulus(window,
-                                position = (-1 * maskPos, 250),
+                                position = (-1 * maskPos, 150),
                                 transparency = 0.5)
 
     # Fusion box stuff
@@ -214,7 +243,7 @@ def staircase(window, images, dominant_eye):
                  height = 180,
                  lineWidth = 4,
                  lineColor = 'grey',
-                 pos = (maskPos, 250),
+                 pos = (maskPos, 150),
                  autoDraw = True)
 
     box_2 = Rect(win = window,
@@ -222,7 +251,7 @@ def staircase(window, images, dominant_eye):
                  height = 180,
                  lineWidth = 4,
                  lineColor = 'grey',
-                 pos = (-1 * maskPos, 250),
+                 pos = (-1 * maskPos, 150),
                  autoDraw = True)
 
     box_1.setAutoDraw(True)
@@ -235,14 +264,7 @@ def staircase(window, images, dominant_eye):
                                             image = file_name,
                                             color = (1,1,1),
                                             size = [150, 150],
-                                            pos = (maskPos,250),
-                                            opacity = 1), frame_paths)
-
-    catch_frames = map(lambda file_name: ImageStim(window,
-                                            image = file_name,
-                                            color = (1,1,1),
-                                            size = [150, 150],
-                                            pos = (-1 * maskPos,250),
+                                            pos = (maskPos,150),
                                             opacity = 1), frame_paths)
 
     #Fixation dot stuff
@@ -250,14 +272,14 @@ def staircase(window, images, dominant_eye):
     fixation_dot_1 = Circle(win = window,
                           radius = 2,
                           fillColor = 'red',
-                          pos = (maskPos, 250),
+                          pos = (maskPos, 150),
                           lineWidth = 0,
                           autoDraw = True)
 
     fixation_dot_2 = Circle(win = window,
                           radius = 2,
                           fillColor = 'red',
-                          pos = (-1 * maskPos, 250),
+                          pos = (-1 * maskPos, 150),
                           lineWidth = 0,
                           autoDraw = True)
 
@@ -266,18 +288,22 @@ def staircase(window, images, dominant_eye):
     transparency_log = []
 
     #catch trials
-    N_TRIALS = 12
+    N_TRIALS = 192
     all_trials = [i for i in range(N_TRIALS)]
     shuffle(all_trials)
 
-    easy_low_contrast = all_trials[:2]
-    easy_high_contrast = all_trials[2:4]
+    easy_low_contrast = all_trials[:40]
+    easy_low_contrast.sort()
+    easy_high_contrast = all_trials[40:80]
+    easy_high_contrast.sort()
 
-    hard_low_contrast = all_trials[4:6]
-    hard_high_contrast = all_trials[6:8]
+    hard_low_contrast = all_trials[80:120]
+    hard_low_contrast.sort()
+    hard_high_contrast = all_trials[120:160]
+    hard_high_contrast.sort()
 
-    invisible_trials = all_trials[8:10]
-    visible_trials = all_trials[10:]
+    invisible_trials = all_trials[160:176]
+    visible_trials = all_trials[176:]
 
     easy_low_contrast_current = 0.1
     easy_high_contrast_current = 0.5
@@ -303,12 +329,10 @@ def staircase(window, images, dominant_eye):
     while i < N_TRIALS:
 
         if i in invisible_trials:
-            invisible_seen += catch_trial(window, choice(images), frames, catch_frames,
-                                          False)
+            invisible_seen += catch_trial(window, choice(images), frames, False, dominant_eye)
             i += 1
         elif i in visible_trials:
-            visible_seen += catch_trial(window, choice(images), frames, catch_frames,
-                                        True)
+            visible_seen += catch_trial(window, choice(images), frames, True, dominant_eye)
             i += 1
 
         elif i in easy_low_contrast:
@@ -325,7 +349,7 @@ def staircase(window, images, dominant_eye):
         elif i in easy_high_contrast:
             transparencies = [0.016 * (n + 1) for n in range(60)]
             transparencies = map(lambda n: n * easy_high_contrast_current, transparencies)
-            result = step(window, transparencies, img_1_high_contrast, frames, easy_high_contrast.index(i)
+            result = step(window, transparencies, img_1_high_contrast, frames, easy_high_contrast.index(i))
             if result[1] != 'DISCOUNTED TRIAL':
                 transparency_log_2.append(easy_high_contrast_current)
                 easy_high_contrast_current += result[0]
