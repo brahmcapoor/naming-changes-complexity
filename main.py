@@ -1,9 +1,9 @@
 from psychopy import visual, core, event, gui
 from psychopy.visual import TextStim
 from random import shuffle, randint
-from helpers import get_subject_info, read_csv, choose_pair
+from helpers import get_subject_info, read_csv, choose_pair, retrieve_subject_info
 from experiment_objects import Image, ImagePair, Trial
-import training, testing, memory, os, csv, name_gen, shutil
+import training, testing, memory, practice, os, csv, name_gen, shutil
 
 """
 Main experimental harness
@@ -108,6 +108,7 @@ def end_section(window, experiment_end = False):
     window.flip()
 
 def main():
+    practice.main()
     new_experiment, subject_number = startup()
 
     if new_experiment:
