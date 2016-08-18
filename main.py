@@ -58,13 +58,6 @@ def setup_files():
                   "Pair Number", "Name 1", "Name 2"]
         wr.writerow(header)
 
-    with open("testing_results.csv", 'wb') as f:
-        wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
-
-        header = ["Subject Number",  "Individual results", "Image 1 Average", "Image 2 Average", "Names"]
-
-        wr.writerow(header)
-
     with open("memory_results_before.csv", 'wb') as f:
         wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
         header = ["Subject Number", "Round Number", "Name 1", "Remembered Name 1", "Name 2", "Remembered Name 2", "Foil Name 1", "Foil Name 2"]
@@ -108,7 +101,7 @@ def end_section(window, experiment_end = False):
     window.flip()
 
 def main():
-    practice.main()
+
     new_experiment, subject_number = startup()
 
     if new_experiment:
@@ -141,6 +134,8 @@ def main():
                           rgb=(-1,-1,-1),
                           fullscr = True)
 
+    practice.main(window, dom_eye)
+    end_section(window)
     subject_image_pair = ImagePair(pair_path, name_pair)
     trial = Trial(window, subject_number, round_num, dom_eye, subject_image_pair,
                   pair_num)

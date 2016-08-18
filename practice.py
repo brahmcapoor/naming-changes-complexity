@@ -5,14 +5,14 @@ from testing import step
 import os
 
 
-def main():
-    window = visual.Window([1680,1050],
-                          monitor = "testMonitor",
-                          units = "pix",
-                          rgb=(-1,-1,-1),
-                          fullscr = True)
+def main(window, dominant_eye):
 
     # Fusion box stuff
+
+    maskPos = -200
+    if dominant_eye:
+        maskPos = 200
+
 
     box_1 = Rect(win = window,
                  width = 180,
@@ -40,7 +40,7 @@ def main():
                                             image = file_name,
                                             color = (1,1,1),
                                             size = [150, 150],
-                                            pos = (-200,150),
+                                            pos = (maskPos,150),
                                             opacity = 1), frame_paths)
 
     #Fixation dot stuff
@@ -65,14 +65,19 @@ def main():
     img = Image("Pairs/practice_img.jpg", "")
 
     img = img.stimulus(window,
-                       position = (200, 150),
+                       position = (-1*maskPos, 150),
                        transparency = 1)
 
     for i in range(10):
         step(window, transparencies, img, frames, 1)
 
-    event.waitKeys()
-    window.close()
+    box_1.setAutoDraw(False)
+    box_2.setAutoDraw(False)
+
+    fixation_dot_1.setAutoDraw(False)
+    fixation_dot_2.setAutoDraw(False)
+
+
 
 
 if __name__ == '__main__':

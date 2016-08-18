@@ -411,11 +411,6 @@ def staircase(window, images, dominant_eye):
 
     window.flip()
 
-    transparencies = [easy_low_contrast_current,
-                      easy_high_contrast_current,
-                      hard_low_contrast_current,
-                      hard_high_contrast_current]
-
     transparency_logs = [transparency_log_1,
                          transparency_log_2,
                          transparency_log_3,
@@ -426,16 +421,9 @@ def staircase(window, images, dominant_eye):
                           response_times_3,
                           response_times_4]
 
-    return [transparencies, response_time_logs, transparency_logs, visible_seen,
+    return [response_time_logs, transparency_logs, visible_seen,
             invisible_seen, invalid_trials]
 
-def write_to_csv(trial, individual_results, first_average, second_average):
-
-    data = [trial.subject_number, individual_results, first_average, second_average, [image.name for image in trial.image_pair.images]]
-
-    with open('testing_results.csv', 'ab') as f:
-        wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
-        wr.writerow(data)
 
 def create_subject_log(subject_number, response_times, transparency_logs,
                        visible_seen, invisible_seen, invalid_trials):
@@ -473,25 +461,18 @@ def main(trial):
 
     results = staircase(window, images, dominant_eye)
 
-    result_10, result_11, result_20, result_21 = tuple(results[0])
+    response_times = results[0]
 
-    response_times = results[1]
+    transparency_logs = results[1]
 
-    transparency_logs = results[2]
-
-    visible_seen = results[3]
-    invisible_seen = results[4]
-    invalid_trials = results[5]
+    visible_seen = results[2]
+    invisible_seen = results[3]
+    invalid_trials = results[4]
 
     create_subject_log(trial.subject_number, response_times, transparency_logs,
                        visible_seen, invisible_seen, invalid_trials)
 
-    img_1_avg = (result_10 + result_11)/2
-    img_2_avg = (result_20 + result_21)/2
 
-    individual_results = [result_10, result_11, result_20, result_21]
-
-    write_to_csv(trial, individual_results, img_1_avg, img_2_avg)
 
 
 if __name__ == "__main__":
