@@ -42,7 +42,7 @@ def retrieve_subject_info(subject_number):
 
     subjects = read_csv('training_results.csv')
 
-    for subject in subjects:
+    for subject in reversed(subjects):
         if int(subject[0]) == subject_number:
             return tuple(subject)
 
