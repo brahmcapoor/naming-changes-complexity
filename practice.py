@@ -60,7 +60,6 @@ def main(window, dominant_eye):
                           autoDraw = True)
 
 
-    transparencies = [0.016 * (n + 1) for n in range(60)]
 
     img = Image("Pairs/practice_img.jpg", "")
 
@@ -69,7 +68,8 @@ def main(window, dominant_eye):
                        transparency = 1)
 
     for i in range(10):
-        step(window, transparencies, img, frames, 1)
+        transparencies = [0.016 * (n + 1) * 0.05 * i for n in range(60)]
+        step(window, transparencies, img, frames, 0.05 * i)
 
     box_1.setAutoDraw(False)
     box_2.setAutoDraw(False)

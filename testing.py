@@ -82,7 +82,7 @@ def step(window, transparencies, img, frames, i):
     window.flip()
 
     if seen:
-        if keys[0][1] < 0.2:
+        if keys[0][1] < 0.2 or transparencies[3] == 0:
             #they probably pressed the space bar by mistake
             return [0, "DISCOUNTED TRIAL"]
         else:
@@ -388,11 +388,11 @@ def staircase(window, images, dominant_eye):
         if easy_high_contrast_current > 1:
             easy_high_contrast_current = 1
         if easy_high_contrast_current < 0:
-            easy_low_contrast_current = 0
+            easy_high_contrast_current = 0
         if hard_low_contrast_current > 1:
             hard_low_contrast_current = 1
         if hard_low_contrast_current < 0:
-            easy_low_contrast_current = 0
+            hard_low_contrast_current = 0
         if hard_high_contrast_current > 1:
             hard_high_contrast_current = 1
         if hard_high_contrast_current < 0:

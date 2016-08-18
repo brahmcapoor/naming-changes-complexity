@@ -41,14 +41,28 @@ def load_subject_data(subject_number):
     transparency_log_3 = list(map(lambda x: float(x), transparency_log_3))
     transparency_log_4 = list(map(lambda x: float(x), transparency_log_4))
 
-    return (transparency_log_1, transparency_log_2)
+    return (transparency_log_1, transparency_log_2, transparency_log_3, transparency_log_4)
 
 def main():
     subject_number = input("Subject number? ")
-    transparency_log_1, transparency_log_2 = load_subject_data(subject_number)
+    transparency_log_1, transparency_log_2, transparency_log_3, transparency_log_4 = load_subject_data(subject_number)
     graph(transparency_log_1, transparency_log_2)
 
-    find_turning_points(transparencies_1)
+    average_1 = sum(find_turning_points(transparency_log_1))/40
+    average_2 = sum(find_turning_points(transparency_log_2))/40
+
+    average_easy = (average_1 + average_2)/2
+
+    print("Subject average for easy condition is {}".format(average_easy))
+
+    graph(transparency_log_3, transparency_log_4)
+
+    average_3 = sum(find_turning_points(transparency_log_3))/40
+    average_4 = sum(find_turning_points(transparency_log_4))/40
+
+    average_hard = (average_3 + average_4)/2
+
+    print("Subject average for hard condition is {}".format(average_hard))
 
 if __name__ == '__main__':
     main()
