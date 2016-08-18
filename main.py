@@ -140,22 +140,25 @@ def main():
     trial = Trial(window, subject_number, round_num, dom_eye, subject_image_pair,
                   pair_num)
 
+    chosen_pairs = [pair_num]
+    chosen_names = [name_pair]
+
     while True:
         training.main(trial)
         if memory.main(trial):
             break
         else:
             round_num = trial.round_number + 1
-            old_pair_num = pair_num
-            old_name_num = name_num
             while True:
                 pair_num = randint(1,8)
                 name_num = randint(0,7)
-                if pair_num != old_pair_num and name_num != old_name_num:
+                name_pair = names[name_num].split(" ")
+                if pair_num not in chosen_pairs and name_pair not in chosen_names:
                     break
+                chosen_pairs.append(pair_num)
+                chosen_names.append(name_pair)
 
             pair_path = choose_pair(pair_num)
-            name_pair = names[name_num].split(" ")
 
             subject_image_pair = ImagePair(pair_path, name_pair)
             trial = Trial(window,subject_number, round_num, dom_eye,
