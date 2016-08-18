@@ -47,6 +47,7 @@ def main():
     subject_number = input("Subject number? ")
     transparency_log_1, transparency_log_2 = load_subject_data(subject_number)
     graph(transparency_log_1, transparency_log_2)
+
     find_turning_points(transparencies_1)
 
 if __name__ == '__main__':
