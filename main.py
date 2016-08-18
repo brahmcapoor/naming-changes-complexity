@@ -126,7 +126,8 @@ def main():
     if subject_number % 2 != 0 or round_num != 1:
         pair_num = randint(1,8)
         pair_path = choose_pair(pair_num)
-        name_pair = names[randint(0,7)].split(" ")
+        name_num = randint(0,7)
+        name_pair = names[name_num].split(" ")
 
     else:
         last_subject = retrieve_subject_info(subject_number - 1)
@@ -150,9 +151,16 @@ def main():
             break
         else:
             round_num = trial.round_number + 1
-            pair_num = randint(1,8)
+            old_pair_num = pair_num
+            old_name_num = name_num
+            while True:
+                pair_num = randint(1,8)
+                name_num = randint(0,7)
+                if pair_num != old_pair_num and name_num != old_name_num:
+                    break
+
             pair_path = choose_pair(pair_num)
-            name_pair = names[randint(0,7)].split(" ")
+            name_pair = names[name_num].split(" ")
 
             subject_image_pair = ImagePair(pair_path, name_pair)
             trial = Trial(window,subject_number, round_num, dom_eye,
