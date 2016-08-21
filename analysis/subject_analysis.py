@@ -48,8 +48,16 @@ def main():
     transparency_log_1, transparency_log_2, transparency_log_3, transparency_log_4 = load_subject_data(subject_number)
     graph(transparency_log_1, transparency_log_2)
 
-    average_1 = sum(find_turning_points(transparency_log_1))/40
-    average_2 = sum(find_turning_points(transparency_log_2))/40
+    turning_points_1 = find_turning_points(transparency_log_1)
+    if turning_points_1:
+        average_1 = sum(turning_points_1)/len(turning_points_1)
+    else:
+        average_1 = 0
+    turning_points_2 = find_turning_points(transparency_log_2)
+    if turning_points_2:
+        average_2 = sum(turning_points_2)/len(turning_points_2)
+    else:
+        average_2 = 0
 
     average_easy = (average_1 + average_2)/2
 
@@ -57,9 +65,16 @@ def main():
 
     graph(transparency_log_3, transparency_log_4)
 
-    average_3 = sum(find_turning_points(transparency_log_3))/40
-    average_4 = sum(find_turning_points(transparency_log_4))/40
-
+    turning_points_3 = find_turning_points(transparency_log_3)
+    if turning_points_3:
+        average_3 = sum(turning_points_3)/len(turning_points_3)
+    else:
+        average_3 = 0
+    turning_points_4 = find_turning_points(transparency_log_4)
+    if turning_points_4:
+        average_4 = sum(turning_points_4)/len(turning_points_4)
+    else:
+        average_4 = 0
     average_hard = (average_3 + average_4)/2
 
     print("Subject average for hard condition is {}".format(average_hard))
