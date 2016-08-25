@@ -67,8 +67,12 @@ def main(window, dominant_eye):
                        position = (-1*maskPos, 150),
                        transparency = 1)
 
+    transparencies = [0.016 * (n + 1) * 0.1 for n in range(60)]
     for i in range(10):
-        transparencies = [0.016 * (n + 1) * 0.05 * i for n in range(60)]
+        step(window, transparencies, img, frames, 0.05 * i)
+
+    transparencies = [0.016 * (n + 1) * 0.5 for n in range(60)]
+    for i in range(10):
         step(window, transparencies, img, frames, 0.05 * i)
 
     box_1.setAutoDraw(False)

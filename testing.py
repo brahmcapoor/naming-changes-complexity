@@ -7,6 +7,10 @@ from copy import deepcopy
 import os, csv
 
 
+from psychopy import logging
+logging.console.setLevel(logging.WARNING)
+
+
 def step(window, transparencies, img, frames, i):
     """
     Performs a single 'step' for the staircase method.
@@ -265,7 +269,7 @@ def staircase(window, images, dominant_eye):
                                             color = (1,1,1),
                                             size = [150, 150],
                                             pos = (maskPos,150),
-                                            opacity = 1), frame_paths)
+                                            opacity = 0.5), frame_paths)
 
     #Fixation dot stuff
 
@@ -402,6 +406,11 @@ def staircase(window, images, dominant_eye):
         img_1_high_contrast.setOpacity(easy_high_contrast_current)
         img_2_low_contrast.setOpacity(hard_low_contrast_current)
         img_2_high_contrast.setOpacity(hard_high_contrast_current)
+
+        log_message = "Trial " + str(i) + ":" + str(easy_low_contrast_current) + ", "+ str(easy_high_contrast_current) + ", "+ str(hard_low_contrast_current) + ", "+ str(hard_high_contrast_current)
+
+        logging.warn(log_message)
+        logging.flush()
 
 
     box_1.setAutoDraw(False)
