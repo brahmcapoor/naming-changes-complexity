@@ -20,7 +20,7 @@ def find_turning_points(series):
         if i != 0 and i != last_point:
             if (point < series[i - 1] and point < series[i + 1]) or \
             (point > series[i - 1] and point > series[i + 1]):
-                print(i)
+ 
                 turning_points.append(point)
 
     return turning_points
