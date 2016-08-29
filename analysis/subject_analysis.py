@@ -6,7 +6,7 @@ import csv
 
 def graph(transparencies_1, transparencies_2):
 
-    x = [i for i in range(1,41)]
+    x = [i for i in range(1,81)]
     sns.pointplot(x, transparencies_1)
     sns.pointplot(x, transparencies_2)
     plt.show()
@@ -20,7 +20,7 @@ def find_turning_points(series):
         if i != 0 and i != last_point:
             if (point < series[i - 1] and point < series[i + 1]) or \
             (point > series[i - 1] and point > series[i + 1]):
- 
+
                 turning_points.append(point)
 
     return turning_points

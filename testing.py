@@ -292,22 +292,22 @@ def staircase(window, images, dominant_eye):
     transparency_log = []
 
     #catch trials
-    N_TRIALS = 192
+    N_TRIALS = 384
     all_trials = [i for i in range(N_TRIALS)]
     shuffle(all_trials)
 
-    easy_low_contrast = all_trials[:40]
+    easy_low_contrast = all_trials[:80]
     easy_low_contrast.sort()
-    easy_high_contrast = all_trials[40:80]
+    easy_high_contrast = all_trials[80:160]
     easy_high_contrast.sort()
 
-    hard_low_contrast = all_trials[80:120]
+    hard_low_contrast = all_trials[160:240]
     hard_low_contrast.sort()
-    hard_high_contrast = all_trials[120:160]
+    hard_high_contrast = all_trials[240:320]
     hard_high_contrast.sort()
 
-    invisible_trials = all_trials[160:176]
-    visible_trials = all_trials[176:]
+    invisible_trials = all_trials[320:352]
+    visible_trials = all_trials[352:]
 
     easy_low_contrast_current = 0.1
     easy_high_contrast_current = 0.5
