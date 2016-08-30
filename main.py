@@ -1,23 +1,26 @@
-from psychopy import visual, core, event, gui
+from psychopy import visual, event, gui
 from psychopy.visual import TextStim
 from random import shuffle, randint
-from helpers import get_subject_info, read_csv, choose_pair, retrieve_subject_info
 from experiment_objects import Image, ImagePair, Trial
 import training, testing, memory, practice, os, csv, name_gen, shutil
 
 """
-Main experimental harness
+Main experimental harness. Unless you're changing the sections of the experiments,
+you shouldn't have to mess with this too much
 """
 
 def startup():
     """
     Gets various startup config options, and returns a tuple of whether it is a
-    new experiment and what the subject number is.
+    new experiment and what the subject number, round number and dominant eye
+    are.
     """
 
     check = gui.Dlg("New experiment?")
     check.addField("Starting over?", False)
     check.addField("Subject Number", 1)
+    check.addField('Round Number', 1)
+    check.addField('Right eye dominant', True)
     check.show()
 
     return tuple(check.data)
@@ -100,56 +103,104 @@ def end_section(window, experiment_end = False):
     event.waitKeys()
     window.flip()
 
+def retrieve_subject_info(subject_number):
+    """
+    Given the subject number, retrieves which pairs they saw from training_results.csv
+    and the names
+
+    returns a tuple representing the subject
+    """
+
+    subjects = read_csv('training_results.csv')
+
+    for subject in reversed(subjects):
+        if int(subject[0]) == subject_number:
+            return tuple(subject)
+
+def read_csv(filename):
+    """
+    Reads a csv and returns a list of lists with csv data, ignoring the header
+    """
+
+    with open(filename, 'rb') as f:
+        reader = csv.reader(f)
+        data = list(reader)
+
+    return data[1:]
+
+def choose_pair(i):
+    """
+    Returns path to the pair
+    """
+    return "Pairs/Pair " + str(i) +"/"
+
+
 def main():
 
-    new_experiment, subject_number = startup()
+    #get basic experiment info
+    new_experiment, subject_number, round_num, dom_eye = startup()
+
 
     if new_experiment:
+        #delete all existing results files and shuffle names
         setup_files()
         name_gen.main()
 
     names = get_names(new_experiment)
 
-    round_num, dom_eye = get_subject_info(subject_number = subject_number)
-
-
     pair_num = None
     name_pair = None
 
     if subject_number % 2 != 0 or round_num != 1:
+        # new images and names need to be chosen
         pair_num = randint(1,8)
         pair_path = choose_pair(pair_num)
         name_num = randint(0,7)
-        name_pair = names[name_num].split(" ")
+        name_pair = names[name_num].split(" ") #return a list of both names
 
     else:
+        # get the images and names used by the last, odd-numbered subject
         last_subject = retrieve_subject_info(subject_number - 1)
         pair_path = choose_pair(last_subject[3])
         name_pair = [last_subject[5], last_subject[4]]
 
 
+    # set up the psychopy window. Some params may need to be changed here if
+    # changing the display. Creates a full screen, black window
     window = visual.Window([1680,1050],
                           monitor = "testMonitor",
                           units = "pix",
                           rgb=(-1,-1,-1),
                           fullscr = True)
 
+    # practice rounds
     practice.main(window, dom_eye)
+
     end_section(window)
+
+    # subject_image_pair and trial are just objects which store a bunch of
+    # information about the trial that's transferred to the various parts
+    # of the experiment
     subject_image_pair = ImagePair(pair_path, name_pair)
     trial = Trial(window, subject_number, round_num, dom_eye, subject_image_pair,
                   pair_num)
 
+    # set up a list of pairs and names already chosen so that if we need to
+    # rechoose, we choose different ones.
     chosen_pairs = [pair_num]
     chosen_names = [name_pair]
 
     while True:
+        # continue training and memory test until the memory task is passed
         training.main(trial)
         if memory.main(trial):
+            # passed the memory test
             break
         else:
+            # reset! Restart training and memory
             round_num = trial.round_number + 1
             while True:
+                # choose new images and names
                 pair_num = randint(1,8)
                 name_num = randint(0,7)
                 name_pair = names[name_num].split(" ")
@@ -160,6 +211,7 @@ def main():
 
             pair_path = choose_pair(pair_num)
 
+            # update the subject_image_pair and trial
             subject_image_pair = ImagePair(pair_path, name_pair)
             trial = Trial(window,subject_number, round_num, dom_eye,
                           subject_image_pair, pair_num)

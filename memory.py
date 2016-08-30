@@ -1,12 +1,60 @@
 from psychopy import visual, core, event
 from psychopy.visual import ImageStim, TextStim
-from helpers import retrieve_subject_info, choose_pair, get_user_input
 from random import sample
 import os, csv
 
+"""
+I'M NOT GOING TO COMMENT THIS THROUGHOUT, SO THIS IS HOW ANIMATION WORKS:
+
+for frameN in range(number_of_seconds * monitory_refresh_rate):
+    do_some_stuff()
+    window.flip()
+
+window.flip() refreshes the monitor
+
+(Timing is only precise on a computer with a graphics card)
+"""
+
+def get_user_input(window, position, fontsize = 50):
+
+    """
+    Allows the user to type and see what they type on the screen
+
+    (This is more annoying than it should be on Psychopy, but it works fine now
+    so you shouldn't need to change it)
+    """
+
+    input_name = ""
+    user_input = TextStim(win = window,
+                          text = input_name,
+                          pos = position,
+                          height = fontsize)
+
+    user_input.setAutoDraw(True)
+    window.flip()
+
+    while True:
+        char = event.waitKeys()[0]
+        if char.isalpha() and len(char) == 1:
+            input_name += char
+        if char ==  'return':
+            user_input.setAutoDraw(False)
+            window.flip()
+            return input_name
+        if char == 'comma':
+            # psychopy inexplicably doesn't respond to the backspace key,
+            # so I use the '<' symbol instead
+            input_name = input_name[:-1]
+
+
+        user_input.text = input_name
+        window.flip()
 
 def feedback(correct, window):
 
+    """
+    Shows feedback (Correct! or Wrong!) after each test
+    """
     feedback_text = None
     color = None
 
@@ -36,6 +84,9 @@ def feedback(correct, window):
 
 
 def test_image(window, name, image):
+    """
+    Tests a single input
+    """
     image.setAutoDraw(True)
     window.flip()
     typed_name = get_user_input(window, (0,-150))
@@ -51,6 +102,9 @@ def write_to_csv(subject_number, round_number, name_1, remembered_name_1,
                  name_2, remembered_name_2, foil_name_1, foil_name_2,
                  final):
 
+    """
+    Writes data to csv
+    """
 
     data = [subject_number, round_number, name_1, remembered_name_1, name_2,
             remembered_name_2, foil_name_1, foil_name_2]
@@ -68,6 +122,10 @@ def write_to_csv(subject_number, round_number, name_1, remembered_name_1,
 
 def main(trial, final = False):
 
+    """
+    The final parameter is to differentiate between the names at the start and the end.
+    """
+    
     window = trial.window
 
     pair_num = trial.pair_num

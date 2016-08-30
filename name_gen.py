@@ -1,7 +1,9 @@
 from random import sample, shuffle, randint, choice
 
 """
-Generates 16 random pairs of names, one simple and one complex
+Generates 8 random pairs of names, one simple and one complex.
+
+It's a pretty simple script, so it's not commented. 
 """
 
 

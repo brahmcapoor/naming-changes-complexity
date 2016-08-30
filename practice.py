@@ -4,8 +4,16 @@ from experiment_objects import Image
 from testing import step
 import os
 
+"""
+The practice trials
+"""
 
 def main(window, dominant_eye):
+
+    """
+    This is pretty much just a less complicated version of the step method
+    in the testing script, so it's not commented that much.
+    """
 
     # Fusion box stuff
 
@@ -68,9 +76,12 @@ def main(window, dominant_eye):
                        transparency = 1)
 
     transparencies = [0.016 * (n + 1) * 0.1 for n in range(60)]
+
+    #ten trials at 10% contrast
     for i in range(10):
         step(window, transparencies, img, frames, 0.05 * i)
 
+    #ten trials at 50% contrast
     transparencies = [0.016 * (n + 1) * 0.5 for n in range(60)]
     for i in range(10):
         step(window, transparencies, img, frames, 0.05 * i)

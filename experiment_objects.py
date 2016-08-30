@@ -1,5 +1,10 @@
 from psychopy import visual
 
+
+"""
+These are the objets used to transfer information through the various stages of the experiment.
+You shouldn't need to touch this at all, so it's not commented. 
+"""
 class Image():
 
     def __init__(self, path, name):

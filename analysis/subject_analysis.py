@@ -3,6 +3,10 @@ import seaborn as sns
 from random import shuffle
 import csv
 
+"""
+The script required for the data analysis. Requires several python libraries to function
+but otherwise isn't too complicated.
+"""
 
 def graph(transparencies_1, transparencies_2):
 
