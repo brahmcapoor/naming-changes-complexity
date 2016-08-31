@@ -176,7 +176,6 @@ def main():
     # practice rounds
     practice.main(window, dom_eye)
 
-    end_section(window)
 
     # subject_image_pair and trial are just objects which store a bunch of
     # information about the trial that's transferred to the various parts
@@ -192,7 +191,9 @@ def main():
 
     while True:
         # continue training and memory test until the memory task is passed
+        end_section(window)
         training.main(trial)
+        end_section(window)
         if memory.main(trial):
             # passed the memory test
             break

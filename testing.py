@@ -334,7 +334,7 @@ def staircase(window, images, dominant_eye):
                                             color = (1,1,1),
                                             size = [150, 150],
                                             pos = (maskPos,150),
-                                            opacity = 0.5), frame_paths)
+                                            opacity = 1), frame_paths)
 
     #Fixation dot stuff
 
@@ -428,9 +428,9 @@ def staircase(window, images, dominant_eye):
                 #invalid trial
                 invalid_trials += 1
 
-        """
-        ALL OTHER TRIALS FOLLOW THE SAME PATTERN AS ABOVE
-        """
+
+        #ALL OTHER TRIALS FOLLOW THE SAME PATTERN AS ABOVE
+
 
         elif i in easy_high_contrast:
             transparencies = [0.016 * (n + 1) for n in range(60)]
