@@ -154,7 +154,8 @@ def pressToContinue(window):
     text_2.draw()
 
     window.flip()
-    event.waitKeys()
+    while True:
+        if event.getKeys(['right'])
     window.flip()
 
 def catch_trial(window, image, frames, visible, dominant_eye):
@@ -409,13 +410,16 @@ def staircase(window, images, dominant_eye):
         logging.warn("TRIAL " + str(i) + ":")
 
         if i in invisible_trials:
+            logging.warn("INVISIBLE CATCH TRIAL")
             invisible_seen += catch_trial(window, choice(images), frames, False, dominant_eye)
             i += 1
         elif i in visible_trials:
+            logging.warn("VISIBLE CATCH TRIAL")
             visible_seen += catch_trial(window, choice(images), frames, True, dominant_eye)
             i += 1
 
         elif i in easy_low_contrast:
+            logging.warn("EASY LOW CONTRAST")
             transparencies = [0.016 * (n + 1) for n in range(60)]
             transparencies = map(lambda n: n * easy_low_contrast_current, transparencies) #this array is a list of the transparencies required for the image to ramp up
             result = step(window, transparencies, img_1_low_contrast, frames, easy_low_contrast.index(i))
@@ -433,6 +437,7 @@ def staircase(window, images, dominant_eye):
 
 
         elif i in easy_high_contrast:
+            logging.warn("EASY HIGH CONTRAST")
             transparencies = [0.016 * (n + 1) for n in range(60)]
             transparencies = map(lambda n: n * easy_high_contrast_current, transparencies)
             result = step(window, transparencies, img_1_high_contrast, frames, easy_high_contrast.index(i))
@@ -443,7 +448,9 @@ def staircase(window, images, dominant_eye):
                 i += 1
             else:
                 invalid_trials += 1
+
         elif i in hard_low_contrast:
+            logging.warn("HARD LOW CONTRAST")
             transparencies = [0.016 * (n + 1) for n in range(60)]
             transparencies = map(lambda n: n * hard_low_contrast_current, transparencies)
             result = step(window, transparencies, img_2_low_contrast, frames, hard_low_contrast.index(i))
@@ -454,7 +461,9 @@ def staircase(window, images, dominant_eye):
                 i += 1
             else:
                 invalid_trials += 1
+
         elif i in hard_high_contrast:
+            logging.warn("HARD HIGH CONTRAST")
             transparencies = [0.016 * (n + 1) for n in range(60)]
             transparencies = map(lambda n: n * hard_high_contrast_current, transparencies)
             result = step(window, transparencies, img_2_high_contrast, frames, hard_high_contrast.index(i))

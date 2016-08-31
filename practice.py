@@ -2,6 +2,7 @@ from psychopy import visual, event
 from psychopy.visual import ImageStim, Rect, Circle
 from experiment_objects import Image
 from testing import step
+from random import shuffle
 import os
 
 """
@@ -77,14 +78,22 @@ def main(window, dominant_eye):
 
     transparencies = [0.016 * (n + 1) * 0.1 for n in range(60)]
 
-    #ten trials at 10% contrast
-    for i in range(10):
-        step(window, transparencies, img, frames, 0.05 * i)
+    # ten trials at 10% contrast and ten at 50%
+    N_TRIALS = 20
+    all_trials = [i for i in range(N_TRIALS)]
+    shuffle(all_trials)
 
-    #ten trials at 50% contrast
-    transparencies = [0.016 * (n + 1) * 0.5 for n in range(60)]
-    for i in range(10):
-        step(window, transparencies, img, frames, 0.05 * i)
+    low_contrast = all_trials[:10]
+    high_contrast = all_trials[10:]
+
+    low_transparencies = [0.016 * (n + 1) * 0.1 for n in range(60)]
+    high_transparencies = [0.016 * (n + 1) * 0.5 for n in range(60)]
+
+    for i in range(N_TRIALS):
+        if i in low_contrast:
+            step(window, low_transparencies, img, frames, 0.05 * i)
+        if i in high_contrast:
+            step(window, high_transparencies, img, frames, 0.05 * i)
 
     box_1.setAutoDraw(False)
     box_2.setAutoDraw(False)
