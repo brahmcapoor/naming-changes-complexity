@@ -1,11 +1,6 @@
-from psychopy import visual
-
-
-"""
-These are the objets used to transfer information through the various stages of
-the experiment.
-You shouldn't need to touch this at all, so it's not commented.
-"""
+import training
+import memory
+import testing
 
 
 class Image():
@@ -48,30 +43,22 @@ class Image():
         return foil
 
 
-class ImagePair():
+class Subject():
 
-    def __init__(self, path, name_pair):
-
-        self.img_1 = Image(path + "1.png", name_pair[0])
-        self.img_2 = Image(path + "2.png", name_pair[1])
-        self.images = [self.img_1, self.img_2]
-
-
-class Trial():
-
-    """
-    In hindsight, this should be called 'Subject' but this is far too
-    incremental a change to be worthwhile.
-
-    It is called 'Subject' in exp2
-    """
-
-    def __init__(self, window, subject_number, round_number, dominant_eye,
-                 image_pair, pair_num):
-
+    def __init__(self, window, round_number, dominant_eye, images):
         self.window = window
-        self.subject_number = subject_number
-        self.round_number = round_number
+        self.round_Number = round_number
         self.dominant_eye = dominant_eye
-        self.image_pair = image_pair
-        self.pair_num = pair_num
+        self.images = image
+
+    def train(self):
+        training.main(self)
+
+    def memory_test_first(self):
+        memory.main(self)
+
+    def test(self):
+        testing.main(self)
+
+    def memory_test_second(self):
+        memory.main(self, True)
