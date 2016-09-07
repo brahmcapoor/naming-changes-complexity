@@ -16,7 +16,7 @@ def startup():
     are.
     """
 
-    check = gui.Dlg("New experiment?")
+    check = gui.Dlg("Startup")
     check.addField("Starting over?", False)
     check.addField("Subject Number", 1)
     check.addField('Round Number', 1)
