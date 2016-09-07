@@ -1,7 +1,8 @@
 from psychopy import visual, core, event
 from psychopy.visual import ImageStim, TextStim
 from random import sample
-import os, csv
+import os
+import csv
 
 """
 I'M NOT GOING TO COMMENT THIS THROUGHOUT, SO THIS IS HOW ANIMATION WORKS:
@@ -15,7 +16,8 @@ window.flip() refreshes the monitor
 (Timing is only precise on a computer with a graphics card)
 """
 
-def get_user_input(window, position, fontsize = 50):
+
+def get_user_input(window, position, fontsize=50):
 
     """
     Allows the user to type and see what they type on the screen
@@ -25,10 +27,10 @@ def get_user_input(window, position, fontsize = 50):
     """
 
     input_name = ""
-    user_input = TextStim(win = window,
-                          text = input_name,
-                          pos = position,
-                          height = fontsize)
+    user_input = TextStim(win=window,
+                          text=input_name,
+                          pos=position,
+                          height=fontsize)
 
     user_input.setAutoDraw(True)
     window.flip()
@@ -37,7 +39,7 @@ def get_user_input(window, position, fontsize = 50):
         char = event.waitKeys()[0]
         if char.isalpha() and len(char) == 1:
             input_name += char
-        if char ==  'return':
+        if char == 'return':
             user_input.setAutoDraw(False)
             window.flip()
             return input_name
@@ -46,9 +48,9 @@ def get_user_input(window, position, fontsize = 50):
             # so I use the '<' symbol instead
             input_name = input_name[:-1]
 
-
         user_input.text = input_name
         window.flip()
+
 
 def feedback(correct, window):
 
@@ -65,13 +67,13 @@ def feedback(correct, window):
         feedback_text = "Wrong"
         color = "Red"
 
-    feedback = TextStim(win = window,
-                        text = feedback_text,
-                        pos = (0,0),
-                        alignHoriz = 'center',
-                        alignVert = 'center',
-                        height = 50,
-                        color = color)
+    feedback = TextStim(win=window,
+                        text=feedback_text,
+                        pos=(0, 0),
+                        alignHoriz='center',
+                        alignVert='center',
+                        height=50,
+                        color=color)
 
     feedback.setAutoDraw(True)
 
@@ -89,7 +91,7 @@ def test_image(window, name, image):
     """
     image.setAutoDraw(True)
     window.flip()
-    typed_name = get_user_input(window, (0,-150))
+    typed_name = get_user_input(window, (0, -150))
     image.setAutoDraw(False)
     window.flip()
 
@@ -115,17 +117,18 @@ def write_to_csv(subject_number, round_number, name_1, remembered_name_1,
         filename = "memory_results_after.csv"
 
     with open(filename, 'ab') as f:
-        wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC, lineterminator = '\n')
+        wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC, lineterminator='\n')
 
         wr.writerow(data)
 
 
-def main(trial, final = False):
+def main(trial, final=False):
 
     """
-    The final parameter is to differentiate between the names at the start and the end.
+    The final parameter is to differentiate between the names at the start and
+    the end.
     """
-    
+
     window = trial.window
 
     pair_num = trial.pair_num
@@ -135,36 +138,38 @@ def main(trial, final = False):
     name_1 = img_1.name
     name_2 = img_2.name
 
-    pic_1 = img_1.stimulus(window, size = 200)
+    pic_1 = img_1.stimulus(window, size=200)
     foil_1 = img_1.foil(window)
 
-    pic_2 = img_2.stimulus(window, size = 200)
+    pic_2 = img_2.stimulus(window, size=200)
     foil_2 = img_2.foil(window)
-
 
     remembered_name_1 = (window, name_1, pic_1)
     foil_name_1 = (window, "", foil_1)
     remembered_name_2 = (window, name_2, pic_2)
     foil_name_2 = (window, "", foil_2)
 
-    subject_inputs = [remembered_name_1, foil_name_1, remembered_name_2, foil_name_2]
+    subject_inputs = [remembered_name_1, foil_name_1, remembered_name_2,
+                      foil_name_2]
 
-    for index in sample([0,1,2,3], 4):
+    for index in sample([0, 1, 2, 3], 4):
         subject_inputs[index] = test_image(*subject_inputs[index])
 
-    remembered_name_1, foil_name_1, remembered_name_2, foil_name_2 = tuple(subject_inputs)
+    remembered_name_1, foil_name_1, remembered_name_2, foil_name_2 = \
+        tuple(subject_inputs)
 
-    write_to_csv(subject_number = trial.subject_number,
-                 round_number = round_number,
-                 name_1 = name_1,
-                 remembered_name_1 = remembered_name_1,
-                 name_2 = name_2,
-                 remembered_name_2 = remembered_name_2,
-                 foil_name_1 = foil_name_1,
-                 foil_name_2 = foil_name_2,
-                 final = final)
+    write_to_csv(subject_number=trial.subject_number,
+                 round_number=round_number,
+                 name_1=name_1,
+                 remembered_name_1=remembered_name_1,
+                 name_2=name_2,
+                 remembered_name_2=remembered_name_2,
+                 foil_name_1=foil_name_1,
+                 foil_name_2=foil_name_2,
+                 final=final)
 
-    all_correct = remembered_name_1 == name_1 and remembered_name_2 == name_2   and foil_name_1 == "" and foil_name_2 == ""
+    all_correct = remembered_name_1 == name_1 and remembered_name_2 == name_2 \
+        and foil_name_1 == "" and foil_name_2 == ""
 
     return all_correct
 

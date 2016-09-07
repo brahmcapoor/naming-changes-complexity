@@ -3,14 +3,15 @@ from random import sample, shuffle, randint, choice
 """
 Generates 8 random pairs of names, one simple and one complex.
 
-It's a pretty simple script, so it's not commented. 
+It's a pretty simple script, so it's not commented.
 """
 
 
 VOWELS = ['a', 'e', 'i', 'o', 'u']
 CONSONANTS = ['s', 'z', 'f', 'v', 'k', 'g', 'p', 'b', 't', 'd']
 
-def generate_random_word(complex = False):
+
+def generate_random_word(complex=False):
     """
     Generates one random word
     """
@@ -26,9 +27,7 @@ def generate_random_word(complex = False):
     shuffle(vowels)
     shuffle(consonants)
 
-
     return "".join(consonants[i] + vowels[i] for i in range(letters))
-
 
 
 def generate_pair_name():

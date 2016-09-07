@@ -2,12 +2,20 @@ from psychopy import visual, event, gui
 from psychopy.visual import TextStim
 from random import shuffle, randint
 from experiment_objects import Image, ImagePair, Trial
-import training, testing, memory, practice, os, csv, name_gen, shutil
+import training
+import testing
+import memory
+import practice
+import os
+import csv
+import name_gen
+import shutil
 
 """
-Main experimental harness. Unless you're changing the sections of the experiments,
-you shouldn't have to mess with this too much
+Main experimental harness. Unless you're changing the sections of the
+experiments, you shouldn't have to mess with this too much
 """
+
 
 def startup():
     """
@@ -25,7 +33,8 @@ def startup():
 
     return tuple(check.data)
 
-def get_names(new_experiment = False):
+
+def get_names(new_experiment=False):
     """
     Reads a list of names from names.txt, writes them into a list, and
     shuffles the list
@@ -35,7 +44,7 @@ def get_names(new_experiment = False):
 
     with open('names.txt', 'rb') as f:
         names = f.read().splitlines()
-    #shuffle before each experiment begins
+    # shuffle before each experiment begins
     if new_experiment:
         shuffle(names)
         with open('names.txt', 'wb') as f:
@@ -43,12 +52,14 @@ def get_names(new_experiment = False):
 
     return names
 
+
 def get_chosen_pairs():
     """
     Returns all the pair numbers that have already been chosen
     """
     data = read_csv('training_results.csv')
     return [subject[3] for subject in data]
+
 
 def setup_files():
     """
@@ -63,12 +74,16 @@ def setup_files():
 
     with open("memory_results_before.csv", 'wb') as f:
         wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
-        header = ["Subject Number", "Round Number", "Name 1", "Remembered Name 1", "Name 2", "Remembered Name 2", "Foil Name 1", "Foil Name 2"]
+        header = ["Subject Number", "Round Number", "Name 1",
+                  "Remembered Name 1", "Name 2", "Remembered Name 2",
+                  "Foil Name 1", "Foil Name 2"]
         wr.writerow(header)
 
     with open("memory_results_after.csv", 'wb') as f:
         wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
-        header = ["Subject Number", "Round number", "Name 1", "Remembered Name 1", "Name 2", "Remembered Name 2", "Foil Name 1", "Foil Name 2"]
+        header = ["Subject Number", "Round number", "Name 1",
+                  "Remembered Name 1", "Name 2", "Remembered Name 2",
+                  "Foil Name 1", "Foil Name 2"]
         wr.writerow(header)
 
     if os.path.exists("subject logs"):
@@ -77,12 +92,14 @@ def setup_files():
     os.makedirs("subject logs")
 
     with open('subject logs/catch trials.csv', 'wb') as f:
-        wr = csv.writer(f, quoting = csv.QUOTE_NONNUMERIC)
+        wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
 
-        header = ["Subject Number", "Visible seen (should be > 14)", "Invisible seen (should be < 2)", "Invalid Trials"]
+        header = ["Subject Number", "Visible seen (should be > 14)", "Invisible \
+                  seen (should be < 2)", "Invalid Trials"]
         wr.writerow(header)
 
-def end_section(window, experiment_end = False):
+
+def end_section(window, experiment_end=False):
     """
     After each section, press space to continue
     """
@@ -91,22 +108,23 @@ def end_section(window, experiment_end = False):
         string = "End of experiment. Thank you!"
     else:
         string = "End of section"
-    text= TextStim(win = window,
-                    text = string,
-                    pos = (0,0),
-                    alignHoriz = 'center',
-                    alignVert = 'center',
-                    height = 50)
+    text = TextStim(win=window,
+                    text=string,
+                    pos=(0, 0),
+                    alignHoriz='center',
+                    alignVert='center',
+                    height=50)
 
     text.draw()
     window.flip()
     event.waitKeys()
     window.flip()
 
+
 def retrieve_subject_info(subject_number):
     """
-    Given the subject number, retrieves which pairs they saw from training_results.csv
-    and the names
+    Given the subject number, retrieves which pairs they saw from
+    training_results.csv and the names
 
     returns a tuple representing the subject
     """
@@ -116,6 +134,7 @@ def retrieve_subject_info(subject_number):
     for subject in reversed(subjects):
         if int(subject[0]) == subject_number:
             return tuple(subject)
+
 
 def read_csv(filename):
     """
@@ -128,21 +147,21 @@ def read_csv(filename):
 
     return data[1:]
 
+
 def choose_pair(i):
     """
     Returns path to the pair
     """
-    return "Pairs/Pair " + str(i) +"/"
+    return "../Pairs/Pair " + str(i) + "/"
 
 
 def main():
 
-    #get basic experiment info
+    # get basic experiment info
     new_experiment, subject_number, round_num, dom_eye = startup()
 
-
     if new_experiment:
-        #delete all existing results files and shuffle names
+        # delete all existing results files and shuffle names
         setup_files()
         name_gen.main()
 
@@ -153,10 +172,10 @@ def main():
 
     if subject_number % 2 != 0 or round_num != 1:
         # new images and names need to be chosen
-        pair_num = randint(1,8)
+        pair_num = randint(1, 8)
         pair_path = choose_pair(pair_num)
-        name_num = randint(0,7)
-        name_pair = names[name_num].split(" ") #return a list of both names
+        name_num = randint(0, 7)
+        name_pair = names[name_num].split(" ")  # return a list of both names
 
     else:
         # get the images and names used by the last, odd-numbered subject
@@ -164,25 +183,23 @@ def main():
         pair_path = choose_pair(last_subject[3])
         name_pair = [last_subject[5], last_subject[4]]
 
-
     # set up the psychopy window. Some params may need to be changed here if
     # changing the display. Creates a full screen, black window
-    window = visual.Window([1680,1050],
-                          monitor = "testMonitor",
-                          units = "pix",
-                          rgb=(-1,-1,-1),
-                          fullscr = True)
+    window = visual.Window([1680, 1050],
+                           monitor="testMonitor",
+                           units="pix",
+                           rgb=(-1, -1, -1),
+                           fullscr=True)
 
     # practice rounds
     practice.main(window, dom_eye)
-
 
     # subject_image_pair and trial are just objects which store a bunch of
     # information about the trial that's transferred to the various parts
     # of the experiment
     subject_image_pair = ImagePair(pair_path, name_pair)
-    trial = Trial(window, subject_number, round_num, dom_eye, subject_image_pair,
-                  pair_num)
+    trial = Trial(window, subject_number, round_num, dom_eye,
+                  subject_image_pair, pair_num)
 
     # set up a list of pairs and names already chosen so that if we need to
     # rechoose, we choose different ones.
@@ -202,10 +219,11 @@ def main():
             round_num = trial.round_number + 1
             while True:
                 # choose new images and names
-                pair_num = randint(1,8)
-                name_num = randint(0,7)
+                pair_num = randint(1, 8)
+                name_num = randint(0, 7)
                 name_pair = names[name_num].split(" ")
-                if pair_num not in chosen_pairs and name_pair not in chosen_names:
+                if pair_num not in chosen_pairs and name_pair not in \
+                        chosen_names:
                     break
                 chosen_pairs.append(pair_num)
                 chosen_names.append(name_pair)
@@ -214,7 +232,7 @@ def main():
 
             # update the subject_image_pair and trial
             subject_image_pair = ImagePair(pair_path, name_pair)
-            trial = Trial(window,subject_number, round_num, dom_eye,
+            trial = Trial(window, subject_number, round_num, dom_eye,
                           subject_image_pair, pair_num)
 
     end_section(trial.window)

@@ -4,13 +4,14 @@ import turtle
 
 """
 Generates circular mondrians. You shouldn't need to change this so comments
-are relatvely sparse. 
+are relatvely sparse.
 """
 
-turtle.setup(200,200)
+turtle.setup(200, 200)
 
 win = turtle.Screen()
-win.screensize(200,200)
+win.screensize(200, 200)
+
 
 def generate_mondrian(centers):
     t = turtle.Pen()
@@ -18,9 +19,9 @@ def generate_mondrian(centers):
     t.ht()
     last_color = None
     colors = {
-        (1,0,0): "Red",
-        (0,0,1): "Blue",
-        (1,1,0): "Yellow"
+        (1, 0, 0): "Red",
+        (0, 0, 1): "Blue",
+        (1, 1, 0): "Yellow"
     }
     for center in centers:
         t.up()
@@ -34,15 +35,16 @@ def generate_mondrian(centers):
                 break
 
         t.fillcolor(color)
-        radius = random.choice([30,40,50,60])
+        radius = random.choice([30, 40, 50, 60])
 
         t.begin_fill()
-        t.circle(radius) # draw a circle of random radius
+        t.circle(radius)  # draw a circle of random radius
         t.end_fill()
 
 
 for i in range(10):
-    centers = [(40*i+20,40*j+20) for i in range(-3,3) for j in range(-3,3)]
+    centers = [(40 * i + 20, 40*j+20) for i in range(-3, 3)
+               for j in range(-3, 3)]
     random.shuffle(centers)
     generate_mondrian(centers)
     input("Press enter to continue")

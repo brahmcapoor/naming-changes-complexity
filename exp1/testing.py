@@ -3,10 +3,12 @@ from psychopy.visual import Rect, Circle, ImageStim, TextStim
 from psychopy.core import Clock
 from random import sample, choice, shuffle
 from copy import deepcopy
-import os, csv
+import os
+import csv
 
 """
-I'M NOT GOING TO COMMENT THIS THROUGHOUT, SO THIS IS HOW ANIMATION & STIMULUS PRESENTATION WORKS:
+I'M NOT GOING TO COMMENT THIS THROUGHOUT, SO THIS IS HOW ANIMATION & STIMULUS
+PRESENTATION WORKS:
 
 for frameN in range(number_of_seconds * monitory_refresh_rate):
     draw_some_stuff()
@@ -18,9 +20,10 @@ window.flip() refreshes the monitor
 
 
 OTHER NOTES:
-    This is a very long, relatively intricate at at frequently horrendously inelegant implementation, but
-    making incremental changes actually isn't too challenging. Just make sure at all times the functions
-    are passing the right information to each other.
+    This is a very long, relatively intricate at at frequently horrendously
+    inelegant implementation, but making incremental changes actually isn't too
+    challenging. Just make sure at all times the functions are passing the
+    right information to each other.
 """
 
 from psychopy import logging
@@ -36,46 +39,52 @@ def step(window, transparencies, img, frames, i):
 
     There's a bunch of parameters here:
         window is the psychopy window
-        transparencies is a list of transparencies - one per frame - to allow for the ramping up of the image
+        transparencies is a list of transparencies - one per frame - to allow
+                        for the ramping up of the image
         img is the stimulus
         frames is an array of all the mask frames
-        i is the step number with the staircase, needed to determine the increment
+        i is the step number with the staircase, needed to determine the
+            increment
 
-    This function returns an increment - positive, negative or 0 if an invalid trial - that
-    is added to the transparency on the next step of the staircase as well as a timestamp of the keypress
-    or a status as to whether the trial was discounted or had no response
+    This function returns an increment - positive, negative or 0 if an invalid
+    trial - that is added to the transparency on the next step of the staircase
+    as well as a timestamp of the keypress or a status as to whether the trial
+    was discounted or had no response
     """
 
-    # If a stimulus seems to be duplicated, it is so it can be shown in both eyes
-    text_1 = TextStim(win = window,
-                      text = "Press space if \nyou saw something",
-                      pos= (200, 150),
-                      alignHoriz = 'center',
-                      alignVert = 'center')
+    # If a stimulus seems to be duplicated, it is so it can be shown in both
+    # eyes
 
-    text_2 = TextStim(win = window,
-                      text = "Press space if \nyou saw something",
-                      pos = (-200,150),
-                      alignHoriz = 'center',
-                      alignVert = 'center')
+    text_1 = TextStim(win=window,
+                      text="Press space if \nyou saw something",
+                      pos=(200, 150),
+                      alignHoriz='center',
+                      alignVert='center')
+
+    text_2 = TextStim(win=window,
+                      text="Press space if \nyou saw something",
+                      pos=(-200, 150),
+                      alignHoriz='center',
+                      alignVert='center')
 
     increment = 0.02
-    #changes the increment after half the trials are done.
+
+    # changes the increment after half the trials are done.
     if i > 39:
         increment = 0.01
     pressToContinue(window)
 
     img.setAutoDraw(True)
 
-    #for timing
+    # for timing
     clock = Clock()
-    keys = event.getKeys(timeStamped = clock)
+    keys = event.getKeys(timeStamped=clock)
 
     # seen becomes True when the space bar key is pressed, indicating
     # that something is seen and so skipping to the end of the trial
     seen = False
 
-    #shows the image and the mask for 1 second.
+    # shows the image and the mask for 1 second.
     for frameN in range(60):
         opacity = transparencies[frameN]
         img.opacity = opacity
@@ -84,7 +93,7 @@ def step(window, transparencies, img, frames, i):
 
         mask_frame.draw()
 
-        keys = event.getKeys(['space'], timeStamped = clock)
+        keys = event.getKeys(['space'], timeStamped=clock)
         if keys:
             seen = True
             break
@@ -101,7 +110,7 @@ def step(window, transparencies, img, frames, i):
         mask_frame.draw()
 
         if not seen:
-            keys = event.getKeys(['space'], timeStamped = clock)
+            keys = event.getKeys(['space'], timeStamped=clock)
             if keys:
                 seen = True
 
@@ -109,10 +118,10 @@ def step(window, transparencies, img, frames, i):
 
     # 900 ms more
     if not seen:
-        for frameN in range(54) :
+        for frameN in range(54):
             text_1.draw()
             text_2.draw()
-            keys = event.getKeys(['space'], timeStamped = clock)
+            keys = event.getKeys(['space'], timeStamped=clock)
             if keys:
                 seen = True
                 break
@@ -121,42 +130,49 @@ def step(window, transparencies, img, frames, i):
     window.flip()
 
     if seen:
-        if keys[0][1] < 0.2 or transparencies[3] == 0: # The second of those two conditions indicates whether the transparency of the image is 0
+        if keys[0][1] < 0.2 or transparencies[3] == 0:
+            # The second of those two conditions indicates whether the
+            # transparency of the image is 0
+
             # they probably pressed the space bar by mistake
-            logging.warn("INVALID TRIAL") # add this information the log
+            logging.warn("INVALID TRIAL")  # add this information the log
             return [0, "DISCOUNTED TRIAL"]
+
         else:
             # They saw it! A valid trial
-            logging.warn("SEEN") #add this information to the log
+            logging.warn("SEEN")  # add this information to the log
             return [-1*increment, keys[0][1]]
     else:
         logging.warn("NOT SEEN")
         return [increment, "NO RESPONSE"]
+
 
 def pressToContinue(window):
     """
     Implements "Press to continue" between trials
     """
 
-    text_1 = TextStim(win = window,
-                      text = "Press space to \ncontinue",
-                      pos= (200, 150),
-                      alignHoriz = 'center',
-                      alignVert = 'center')
+    text_1 = TextStim(win=window,
+                      text="Press right to \ncontinue",
+                      pos=(200, 150),
+                      alignHoriz='center',
+                      alignVert='center')
 
-    text_2 = TextStim(win = window,
-                      text = "Press space to \ncontinue",
-                      pos = (-200,150),
-                      alignHoriz = 'center',
-                      alignVert = 'center')
+    text_2 = TextStim(win=window,
+                      text="Press right to \ncontinue",
+                      pos=(-200, 150),
+                      alignHoriz='center',
+                      alignVert='center')
 
     text_1.draw()
     text_2.draw()
 
     window.flip()
     while True:
-        if event.getKeys(['right'])
+        if event.getKeys(['right']):
+            break
     window.flip()
+
 
 def catch_trial(window, image, frames, visible, dominant_eye):
     """
@@ -169,18 +185,17 @@ def catch_trial(window, image, frames, visible, dominant_eye):
     This method simply returns 1 or 0, depending on whether something was seen
     and this is added to the count for that respective type of catch trial.
     """
-    text_1 = TextStim(win = window,
-                      text = "Press space if \nyou saw something",
-                      pos= (200, 150),
-                      alignHoriz = 'center',
-                      alignVert = 'center')
+    text_1 = TextStim(win=window,
+                      text="Press space if \nyou saw something",
+                      pos=(200, 150),
+                      alignHoriz='center',
+                      alignVert='center')
 
-    text_2 = TextStim(win = window,
-                      text = "Press space if \nyou saw something",
-                      pos = (-200,150),
-                      alignHoriz = 'center',
-                      alignVert = 'center')
-
+    text_2 = TextStim(win=window,
+                      text="Press space if \nyou saw something",
+                      pos=(-200, 150),
+                      alignHoriz='center',
+                      alignVert='center')
 
     if dominant_eye:
         img_pos = 200
@@ -197,9 +212,8 @@ def catch_trial(window, image, frames, visible, dominant_eye):
         transparency = 0
 
     img_1 = image.stimulus(window,
-                           position = (img_pos, 150),
-                           transparency = 0)
-
+                           position=(img_pos, 150),
+                           transparency=0)
 
     clock = Clock()
 
@@ -212,15 +226,13 @@ def catch_trial(window, image, frames, visible, dominant_eye):
 
         img_1.setOpacity(opacity)
 
-        frame_num = (frameN//6)%10
+        frame_num = (frameN//6) % 10
 
         mask_frame_1 = frames[frame_num]
 
         mask_frame_1.draw()
 
-
         img_1.draw()
-
 
         keys = event.getKeys(['space'])
         if keys:
@@ -234,7 +246,7 @@ def catch_trial(window, image, frames, visible, dominant_eye):
     for frameN in range(6):
         if skip_to_end:
             break
-        frame_num =  frameN//10
+        frame_num = frameN//10
         mask_frame_1 = frames[frame_num]
 
         mask_frame_1.draw()
@@ -246,7 +258,7 @@ def catch_trial(window, image, frames, visible, dominant_eye):
         window.flip()
 
     if not skip_to_end:
-        for frameN in range(54) :
+        for frameN in range(54):
             text_1.draw()
             text_2.draw()
             keys = event.getKeys(['space'])
@@ -263,25 +275,30 @@ def catch_trial(window, image, frames, visible, dominant_eye):
         logging.warn("NOT SEEN")
         return 0
 
+
 def staircase(window, images, dominant_eye):
     """
     This is the killer function! It handles all 4 staircases, as well as
     the recording of the subject logs. While it is a pain to go through,
-    it's unlikely you'll need to change it much, other than maybe a few constants.
+    it's unlikely you'll need to change it much, other than maybe a few
+    constants.
 
-    This also ties together all of the other staircase/catch trial functions. What
-    this means is that if you want to make a change to the experimental PROCEDURE, you'll
-    most likely want to make a change to one of those functions.
+    This also ties together all of the other staircase/catch trial functions.
+    What this means is that if you want to make a change to the experimental
+    PROCEDURE, you'll most likely want to make a change to one of those
+    functions.
 
-    If - and this is probably unlikely - you need to change the way the experiment handles
-    the data recording and actually INTERACTS with the data that each step provides, this is
-    the function you need to jump into...
+    If - and this is probably unlikely - you need to change the way the
+    experiment handles the data recording and actually INTERACTS with the data
+    that each step provides, this is the function you need to jump into...
 
-    The parameters are fairly simple. Images. is the pair of images for the subject and dominant_eye
-    is a boolean indicating if the right eye is the dominant eye, for positioning purposes.
+    The parameters are fairly simple. Images. is the pair of images for the
+    subject and dominant_eye is a boolean indicating if the right eye is the
+    dominant eye, for positioning purposes.
     """
 
-    # Position of image and mask change based on whether the right eye is dominant
+    # Position of image and mask change based on whether the right eye is
+    # dominant
 
     if dominant_eye:
         maskPos = 200
@@ -291,68 +308,67 @@ def staircase(window, images, dominant_eye):
     # Image stuff - just converting the images to a format Psychopy can present
 
     img_1_low_contrast = images[0].stimulus(window,
-                                            position = (-1 * maskPos, 150),
-                                            transparency = 0.1)
+                                            position=(-1 * maskPos, 150),
+                                            transparency=0.1)
 
     img_1_high_contrast = images[0].stimulus(window,
-                                            position = (-1 * maskPos, 150),
-                                            transparency = 0.5)
+                                             position=(-1 * maskPos, 150),
+                                             transparency=0.5)
 
     img_2_low_contrast = images[1].stimulus(window,
-                                position = (-1 * maskPos, 150),
-                                transparency = 0.1)
+                                            position=(-1 * maskPos, 150),
+                                            transparency=0.1)
 
     img_2_high_contrast = images[1].stimulus(window,
-                                position = (-1 * maskPos, 150),
-                                transparency = 0.5)
+                                             position=(-1 * maskPos, 150),
+                                             transparency=0.5)
 
     # Fusion box stuff - creating the fusion boxes
 
-    box_1 = Rect(win = window,
-                 width = 180,
-                 height = 180,
-                 lineWidth = 4,
-                 lineColor = 'grey',
-                 pos = (maskPos, 150),
-                 autoDraw = True)
+    box_1 = Rect(win=window,
+                 width=180,
+                 height=180,
+                 lineWidth=4,
+                 lineColor='grey',
+                 pos=(maskPos, 150),
+                 autoDraw=True)
 
-    box_2 = Rect(win = window,
-                 width = 180,
-                 height = 180,
-                 lineWidth = 4,
-                 lineColor = 'grey',
-                 pos = (-1 * maskPos, 150),
-                 autoDraw = True)
+    box_2 = Rect(win=window,
+                 width=180,
+                 height=180,
+                 lineWidth=4,
+                 lineColor='grey',
+                 pos=(-1 * maskPos, 150),
+                 autoDraw=True)
 
     box_1.setAutoDraw(True)
     box_2.setAutoDraw(True)
 
     # Mask stuff - generate the masks
 
-    frame_paths = ["Masks/" + file for file in os.listdir("Masks")]
+    frame_paths = ["../Masks/" + file for file in os.listdir("Masks")]
     frames = map(lambda file_name: ImageStim(window,
-                                            image = file_name,
-                                            color = (1,1,1),
-                                            size = [150, 150],
-                                            pos = (maskPos,150),
-                                            opacity = 1), frame_paths)
+                                             image=file_name,
+                                             color=(1, 1, 1),
+                                             size=[150, 150],
+                                             pos=(maskPos, 150),
+                                             opacity=1), frame_paths)
 
-    #Fixation dot stuff
+    # Fixation dot stuff
 
-    fixation_dot_1 = Circle(win = window,
-                          radius = 2,
-                          fillColor = 'red',
-                          pos = (maskPos, 150),
-                          lineWidth = 0,
-                          autoDraw = True)
+    fixation_dot_1 = Circle(win=window,
+                            radius=2,
+                            fillColor='red',
+                            pos=(maskPos, 150),
+                            lineWidth=0,
+                            autoDraw=True)
 
-    fixation_dot_2 = Circle(win = window,
-                          radius = 2,
-                          fillColor = 'red',
-                          pos = (-1 * maskPos, 150),
-                          lineWidth = 0,
-                          autoDraw = True)
-
+    fixation_dot_2 = Circle(win=window,
+                            radius=2,
+                            fillColor='red',
+                            pos=(-1 * maskPos, 150),
+                            lineWidth=0,
+                            autoDraw= True)
 
     response_times = []
     transparency_log = []
@@ -360,12 +376,14 @@ def staircase(window, images, dominant_eye):
     # figuring out which trials fall into which staircase.
 
     N_TRIALS = 384
-    all_trials = [i for i in range(N_TRIALS)] #stores an array of all the trial numbers
-    shuffle(all_trials) #randomizes
+    all_trials = [i for i in range(N_TRIALS)]  # stores an array of all trials
+    shuffle(all_trials)  # randomizes
 
-    # now we separate the list into smaller lists of trial numbers and sort those lists
-    # in ascending order. We sort them so that we know within each list, what the first 20
-    # and what the last 20 trials are so that we can change the increment
+    # now we separate the list into smaller lists of trial numbers and sort
+    # those lists in ascending order. We sort them so that we know within
+    # each list, what the first 20 and what the last 20 trials are so
+    # that we can change the increment
+
     easy_low_contrast = all_trials[:80]
     easy_low_contrast.sort()
     easy_high_contrast = all_trials[80:160]
@@ -405,42 +423,52 @@ def staircase(window, images, dominant_eye):
 
     i = 0
     while i < N_TRIALS:
-        # i increases only when a valid trial occurs. Otherwise, it doesn't increase and the trial is repeated.
+        # i increases only when a valid trial occurs. Otherwise, it doesn't
+        # increase and the trial is repeated.
 
         logging.warn("TRIAL " + str(i) + ":")
 
         if i in invisible_trials:
             logging.warn("INVISIBLE CATCH TRIAL")
-            invisible_seen += catch_trial(window, choice(images), frames, False, dominant_eye)
+            invisible_seen += catch_trial(window, choice(images),
+                                          frames, False, dominant_eye)
             i += 1
         elif i in visible_trials:
             logging.warn("VISIBLE CATCH TRIAL")
-            visible_seen += catch_trial(window, choice(images), frames, True, dominant_eye)
+            visible_seen += catch_trial(window, choice(images),
+                                        frames, True, dominant_eye)
             i += 1
 
         elif i in easy_low_contrast:
             logging.warn("EASY LOW CONTRAST")
             transparencies = [0.016 * (n + 1) for n in range(60)]
-            transparencies = map(lambda n: n * easy_low_contrast_current, transparencies) #this array is a list of the transparencies required for the image to ramp up
-            result = step(window, transparencies, img_1_low_contrast, frames, easy_low_contrast.index(i))
-            if result[1] != 'DISCOUNTED TRIAL': #checks if trial is valid
+            transparencies = map(lambda n: n * easy_low_contrast_current,
+                                 transparencies)
+            # this array is a list of the transparencies required for the image
+            # to ramp up
+
+            result = step(window, transparencies, img_1_low_contrast, frames,
+                          easy_low_contrast.index(i))
+
+            if result[1] != 'DISCOUNTED TRIAL':  # checks if trial is valid
                 transparency_log_1.append(easy_low_contrast_current)
-                easy_low_contrast_current += result[0] #change the transparency for this staircase
+                easy_low_contrast_current += result[0]
+                # change the transparency for this staircase
                 response_times_1.append(result[1])
                 i += 1
             else:
-                #invalid trial
+                # invalid trial
                 invalid_trials += 1
 
-
-        #ALL OTHER TRIALS FOLLOW THE SAME PATTERN AS ABOVE
-
+        # ALL OTHER TRIALS FOLLOW THE SAME PATTERN AS ABOVE
 
         elif i in easy_high_contrast:
             logging.warn("EASY HIGH CONTRAST")
             transparencies = [0.016 * (n + 1) for n in range(60)]
-            transparencies = map(lambda n: n * easy_high_contrast_current, transparencies)
-            result = step(window, transparencies, img_1_high_contrast, frames, easy_high_contrast.index(i))
+            transparencies = map(lambda n: n * easy_high_contrast_current,
+                                 transparencies)
+            result = step(window, transparencies, img_1_high_contrast, frames,
+                          easy_high_contrast.index(i))
             if result[1] != 'DISCOUNTED TRIAL':
                 transparency_log_2.append(easy_high_contrast_current)
                 easy_high_contrast_current += result[0]
@@ -452,8 +480,10 @@ def staircase(window, images, dominant_eye):
         elif i in hard_low_contrast:
             logging.warn("HARD LOW CONTRAST")
             transparencies = [0.016 * (n + 1) for n in range(60)]
-            transparencies = map(lambda n: n * hard_low_contrast_current, transparencies)
-            result = step(window, transparencies, img_2_low_contrast, frames, hard_low_contrast.index(i))
+            transparencies = map(lambda n: n * hard_low_contrast_current,
+                                 transparencies)
+            result = step(window, transparencies, img_2_low_contrast, frames,
+                          hard_low_contrast.index(i))
             if result[1] != 'DISCOUNTED TRIAL':
                 transparency_log_3.append(hard_low_contrast_current)
                 hard_low_contrast_current += result[0]
@@ -465,8 +495,10 @@ def staircase(window, images, dominant_eye):
         elif i in hard_high_contrast:
             logging.warn("HARD HIGH CONTRAST")
             transparencies = [0.016 * (n + 1) for n in range(60)]
-            transparencies = map(lambda n: n * hard_high_contrast_current, transparencies)
-            result = step(window, transparencies, img_2_high_contrast, frames, hard_high_contrast.index(i))
+            transparencies = map(lambda n: n * hard_high_contrast_current,
+                                 transparencies)
+            result = step(window, transparencies, img_2_high_contrast, frames,
+                          hard_high_contrast.index(i))
             if result[1] != 'DISCOUNTED TRIAL':
                 transparency_log_4.append(hard_high_contrast_current)
                 hard_high_contrast_current += result[0]
@@ -474,7 +506,6 @@ def staircase(window, images, dominant_eye):
                 i += 1
             else:
                 invalid_trials += 1
-
 
         # ensures that transparencies stay between 0 and 1
         if easy_low_contrast_current > 1:
@@ -499,14 +530,17 @@ def staircase(window, images, dominant_eye):
         img_2_low_contrast.setOpacity(hard_low_contrast_current)
         img_2_high_contrast.setOpacity(hard_high_contrast_current)
 
-        log_message = "Transparencies:" + str(easy_low_contrast_current) + ", "+ str(easy_high_contrast_current) + ", "+ str(hard_low_contrast_current) + ", "+ str(hard_high_contrast_current)
+        log_message = "Transparencies:" + str(easy_low_contrast_current) + \
+            + ", " + str(easy_high_contrast_current) + ", " + \
+            str(hard_low_contrast_current) + ", " + \
+            str(hard_high_contrast_current)
 
         logging.warn(log_message)
         logging.flush()
 
-    #Wrapping up experiment - undraw everything on screen, and create logs
+    # Wrapping up experiment - undraw everything on screen, and create logs
     box_1.setAutoDraw(False)
-    box_2.setAutoDraw (False)
+    box_2.setAutoDraw(False)
     fixation_dot_1.setAutoDraw(False)
     fixation_dot_2.setAutoDraw(False)
 
@@ -538,7 +572,9 @@ def create_subject_log(subject_number, response_times, transparency_logs,
     with open(filename, 'wb') as f:
         wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
 
-        header = ["Trial number", "Transparency", "Response time", "Transparency", "Response time", "Transparency", "Response time", "Transparency", "Response time"]
+        header = ["Trial number", "Transparency", "Response time",
+                  "Transparency", "Response time", "Transparency",
+                  "Response time", "Transparency", "Response time"]
         wr.writerow(header)
 
         for i in range(len(response_times[1])):
@@ -549,11 +585,12 @@ def create_subject_log(subject_number, response_times, transparency_logs,
             wr.writerow(row)
 
     with open('subject logs/catch trials.csv', 'ab') as f:
-        wr = csv.writer(f, quoting = csv.QUOTE_NONNUMERIC)
+        wr = csv.writer(f, quoting=csv.QUOTE_NONNUMERIC)
 
         data = [subject_number, visible_seen, invisible_seen, invalid_trials]
 
         wr.writerow(data)
+
 
 def main(trial):
 
@@ -576,9 +613,6 @@ def main(trial):
 
     create_subject_log(trial.subject_number, response_times, transparency_logs,
                        visible_seen, invisible_seen, invalid_trials)
-
-
-
 
 if __name__ == "__main__":
     main()

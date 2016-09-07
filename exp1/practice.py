@@ -44,7 +44,7 @@ def main(window, dominant_eye):
 
     # Mask stuff
 
-    frame_paths = ["Masks/" + file for file in os.listdir("Masks")]
+    frame_paths = ["../Masks/" + file for file in os.listdir("../Masks")]
     frames = map(lambda file_name: ImageStim(window,
                                             image = file_name,
                                             color = (1,1,1),
@@ -70,7 +70,7 @@ def main(window, dominant_eye):
 
 
 
-    img = Image("Pairs/practice_img.jpg", "")
+    img = Image("../Pairs/practice_img.jpg", "")
 
     img = img.stimulus(window,
                        position = (-1*maskPos, 150),
